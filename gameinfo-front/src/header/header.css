@@ -1,0 +1,36 @@
+
+ul li{
+    list-style-type: none;
+    float: right;
+}
+
+
+
+.item{
+    margin: 10px;
+}
+
+.text{
+    text-decoration: none;
+    color: black;
+}
+
+.text:hover{
+    color: grey;
+}
+
+.ul{
+    margin-right: 50px;
+}
+
+.clear{
+    clear: both;
+    margin-bottom: 10px;
+}
+
+#logo{
+    float: left;
+    margin-left: 30px;
+}
+
+
