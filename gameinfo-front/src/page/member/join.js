@@ -2,9 +2,11 @@ import './join.css'
 import * as Properties from '../../properties.js'
 import React, {useState} from "react";
 import axios from 'axios'
+import { useHistory} from "react-router-dom"
 
 function Join(){
 
+    const history = useHistory();
 
     const [inputs, setInput] = useState({
         memberId: "",
@@ -23,7 +25,6 @@ function Join(){
     }
 
     const handleSubmit = e =>{
-        e.preventDefault();
 
         const url = Properties.API_URL + "/member/join";
         const header = {
@@ -31,15 +32,18 @@ function Join(){
             'Accept': 'application/json'
         }
         
-        axios.post(url, inputs)
+        axios.post(url, inputs, header)
             .then((result) => {
-                console.log(result.data)
+                alert("가입이 완료되었습니다.");
+                history.push("/login");
+        
             })
             .catch((e) => {
                 alert("가입에 실패");
-                console.log(e);
             })
         
+        e.preventDefault();
+
     }
     
     return (
