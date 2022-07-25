@@ -1,13 +1,20 @@
 
-ul li{
+.header-ul, .header-item{
     list-style-type: none;
     float: right;
+    margin-right: 50px;
 }
 
+.header-ul{
+    margin-top: 5px;
+}
 
+.header-container{
+    background-color: black;
+}
 
-.item{
-    margin: 10px;
+.header-item{
+    margin: 5px 10px;
 }
 
 .text{
@@ -19,18 +26,10 @@ ul li{
     color: grey;
 }
 
-.ul{
-    margin-right: 50px;
-}
-
 .clear{
     clear: both;
-    margin-bottom: 10px;
 }
 
-#logo{
-    float: left;
-    margin-left: 30px;
-}
+
 
 

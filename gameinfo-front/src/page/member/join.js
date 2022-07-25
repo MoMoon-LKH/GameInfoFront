@@ -3,6 +3,7 @@ import * as Properties from '../../properties.js'
 import React, {useState} from "react";
 import axios from 'axios'
 import { useHistory} from "react-router-dom"
+import {Button} from 'react-bootstrap'
 
 function Join(){
 
@@ -75,7 +76,7 @@ function Join(){
                 </div>
                 <div className="join-div">
                     <div className="join-button-div">
-                        <button type='submit'>가입하기</button>
+                        <Button type='submit'>가입하기</Button>
                     </div>
                 </div>
             </form>
