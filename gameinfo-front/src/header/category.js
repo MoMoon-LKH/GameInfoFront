@@ -10,8 +10,8 @@ function Category(){
         <div className='category-container'>
             <ul className='category-ul'>
                 <li className='category-li'><Link className='li-link' to="/">메인</Link></li>
-                <li className='category-li'><Link className='li-link' to="/">뉴스</Link></li>
-                <li className='category-li'><Link className='li-link' to="/">리뷰</Link></li>
+                <li className='category-li'><Link className='li-link' to="/news">뉴스</Link></li>
+                <li className='category-li'><Link className='li-link' to="/reviews">리뷰</Link></li>
                 <li className='category-li'><Link className='li-link' to="/games">게임게시판</Link></li>
             </ul>
         </div>

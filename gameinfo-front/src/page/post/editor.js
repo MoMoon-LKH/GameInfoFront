@@ -9,7 +9,7 @@ import "react-quill/dist/quill.snow.css";
 
 const EditorComponent = () => {
 
-    const QuillRef = useRef<ReactQuill>();
+    const QuillRef = useRef<ReactQuill>(null);
     const [contents, setContents] = useState("");
 
     // 이미지를 업로드 하기 위한 함수
@@ -18,7 +18,7 @@ const EditorComponent = () => {
         const input = document.createElement("input");
         const formData = new FormData();
         let url = "";
-        const ajaxUrl = Properties.API_URL + "user/image";
+        const ajaxUrl = Properties.API_URL + "/user/image";
 
         input.setAttribute("type", "file");
         input.setAttribute("accept", "image/*");
@@ -35,7 +35,7 @@ const EditorComponent = () => {
             try {
             //const res = axios를 통해 백엔드 개발자분과 통신했고, 데이터는 폼데이터로 주고받았습니다.
            
-            axios.post(ajaxUrl, formData, {
+            const res = await axios.post(ajaxUrl, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -44,7 +44,7 @@ const EditorComponent = () => {
                 // 백엔드 개발자 분이 통신 성공시에 보내주는 이미지 url을 변수에 담는다.
                 url = res.data.url;
             }).catch(error => {
-                alert(error.body);
+                alert(error);
             })
             
 
@@ -103,9 +103,9 @@ const EditorComponent = () => {
     <>
         <ReactQuill
                 ref={(element) => {
-                    if (element !== null) {
+                   /*  if (element !== null) {
                     QuillRef.current = element;
-                    }
+                    } */
                 }}
                 value={contents}
                 onChange={setContents}
