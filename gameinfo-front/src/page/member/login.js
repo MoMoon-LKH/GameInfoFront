@@ -28,8 +28,21 @@ function Login(){
         }
 
         axios.post("/api/auth/login", inputs, header)
-        .then(result => {
-            alert("로그인 성공");
+        .then(res => {
+            
+            const data = {
+                "id": res.data.id,
+                "nickname": res.data.nickname,
+                "totken": res.data.accessToken
+            }
+
+            localStorage.setItem("user", data);
+
+
+            axios.defaults.headers.common[
+                "Authorization"  
+            ] = 'Bearer ' + res.data.accessToken;
+
             history.push("/");
         })
         .catch(e =>{

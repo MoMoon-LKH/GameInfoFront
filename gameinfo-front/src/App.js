@@ -11,9 +11,11 @@ import News from './page/post/news.js';
 import Reviews from './page/post/reviews.js';
 
 function App() {
+  let user = localStorage.getItem("user");
+  
   return (
     <div>
-      <Header.NotLoginHeader></Header.NotLoginHeader>
+      <Header.Header user={user}></Header.Header>
       <Category></Category>
       <Switch>
         <Route exact path='/'><Main></Main></Route>
