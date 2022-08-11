@@ -7,7 +7,7 @@ const logoutFunc = () => {
  
     return axios.post("/api/user/logout")
     .then(res => {
-        localStorage.removeItem("user");
+        localStorage.clear();
 
         return res.data; 
     })

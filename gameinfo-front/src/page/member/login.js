@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import './login.css'
 import {Button} from "react-bootstrap"
 
@@ -30,23 +30,26 @@ function Login(){
         axios.post("/api/auth/login", inputs, header)
         .then(res => {
             
+            const response = res.data;
+        
             const data = {
-                "id": res.data.id,
-                "nickname": res.data.nickname,
-                "totken": res.data.accessToken
+                "id": response.id,
+                "nickname": response.nickname,
+                "totken": response.accessToken
             }
 
-            localStorage.setItem("user", data);
+            localStorage.setItem("user", JSON.stringify(data));
+            
 
 
             axios.defaults.headers.common[
                 "Authorization"  
-            ] = 'Bearer ' + res.data.accessToken;
-
-            history.push("/");
+            ] = 'Bearer ${response.accessToken}';
+            
+            history.goBack();
         })
         .catch(e =>{
-
+            alert(e)
         })
 
 
