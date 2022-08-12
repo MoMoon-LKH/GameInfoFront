@@ -8,6 +8,7 @@ function Login(){
 
     const history = useHistory();
 
+
     const [inputs, setInputs] = useState({
         memberId: "",
         password: ""
@@ -20,42 +21,47 @@ function Login(){
         })
     }
 
-    const handleSubmit = e => {
+
+    const handleSubmit = async e =>{
 
         const header = {
             'Content-type': 'application/json',
             'Accept': 'application/json'
         }
+    
 
         axios.post("/api/auth/login", inputs, header)
         .then(res => {
-            
-            const response = res.data;
         
-            const data = {
-                "id": response.id,
-                "nickname": response.nickname,
-                "totken": response.accessToken
-            }
+        const data = {
+            "id": res.data.id,
+            "nickname": res.data.nickname,
+            "totken": res.data.accessToken
+        }
 
-            localStorage.setItem("user", JSON.stringify(data));
-            
-
-
-            axios.defaults.headers.common[
-                "Authorization"  
-            ] = 'Bearer ${response.accessToken}';
-            
-            history.goBack();
-        })
-        .catch(e =>{
-            alert(e)
-        })
+        localStorage.setItem("user", JSON.stringify(data))
 
 
-        e.preventDefault();
+        axios.defaults.headers.common[
+            "Authorization"  
+        ] = 'Bearer ' + res.data.accessToken;
+
+        
+        history.push("/");
+
+    })
+    .catch(e =>{
+        alert(e)
+    })
+
+    e.preventDefault();
+        
+          
+         
+
+        
     }
-
+    
 
     return (
         <div className='container'>
@@ -75,7 +81,7 @@ function Login(){
                         <Link className='text' to='/join'>회원가입</Link><span> | </span><Link className='text' to='/'>비밀번호 찾기</Link>
                     </div>
                     <div className='login-div'>
-                        <div><Button id='login-button' type='submit'>로그인</Button></div>
+                        <div><Button id='login-button' type='submit' >로그인</Button></div>
                     </div>
                 
                 </div>

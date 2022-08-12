@@ -13,28 +13,14 @@ import { useEffect, useState } from 'react';
 
 function App() {
 
-  const [isLogin, setIsLogin] = useState(false);
-  
-  useEffect(() =>{
-
-    if(localStorage.getItem("user") !== null){
-      setIsLogin({
-        ...isLogin,
-        isLogin: true
-      });
-    }
-
-  })
-
- 
 
   return (
     <div>
       <Switch className='body'>
         <Route path='/login'><Login></Login></Route>
         <Route path='/join'><Join></Join></Route>
-      <>
-        <Header isLogin={isLogin}/>
+        <>
+        <Header/>
         <Category></Category>
         <Route exact path='/'><Main></Main></Route>
         <Route path='/games'><Games></Games></Route>
