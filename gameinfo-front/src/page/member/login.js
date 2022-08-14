@@ -36,7 +36,7 @@ function Login(){
         const data = {
             "id": res.data.id,
             "nickname": res.data.nickname,
-            "totken": res.data.accessToken
+            "token": res.data.accessToken
         }
 
         localStorage.setItem("user", JSON.stringify(data))
@@ -47,7 +47,7 @@ function Login(){
         ] = 'Bearer ' + res.data.accessToken;
 
         
-        history.push("/");
+        history.goBack();
 
     })
     .catch(e =>{
@@ -56,9 +56,6 @@ function Login(){
 
     e.preventDefault();
         
-          
-         
-
         
     }
     

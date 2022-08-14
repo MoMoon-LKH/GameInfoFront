@@ -1,8 +1,10 @@
+import axios from 'axios';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import {React } from 'react';
-import {Link} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
 import './header.css'
+import {API_URL} from '../properties.js'
 
 export default function Header(){
 
@@ -14,7 +16,6 @@ export default function Header(){
 
 
     useEffect(() => {
-
         if(user !== null){
             setLoggedIn(true);
         } else{
@@ -25,7 +26,7 @@ export default function Header(){
 
 
     if(isLoggedIn){
-        header = <LoginHeader nickname={user.nickname}/>
+        header = <LoginHeader user={user} setLoggedIn={setLoggedIn}/>
     } else{
         header = <NotLoginHeader />
     }
@@ -40,18 +41,43 @@ export default function Header(){
         <div className='header clear'></div>
         </>
     );
-    
 
 }
 
 
+
 function LoginHeader(props){
+
+    const history = useHistory();
+    const user = props.user;
+
+    const logout = async () => {
+        
+
+        axios.post("/api/user/logout",{},{
+            headers:{
+                'Authorization': 'Bearer ' + user.token
+            }
+        })
+        .then(result => {
+            props.setLoggedIn(false);
+            localStorage.clear();
+            alert("로그아웃이 정상적으로 이루어졌습니다.")
+            history.push("/");
+        })
+        .catch(error => {
+             alert(error)
+        })
+
+    };
+
+
 
     return (
         <>
             <ul className='header-ul'>
-                <li className='header-item ' ><Link className='header item text' >로그아웃</Link></li>
-                <li className='header-item'><Link className='header item text' to='/member/info'>{props.nickname}님</Link></li>
+                <li className='header-item ' ><button onClick={logout}>로그아웃</button></li>
+                <li className='header-item'><Link className='header item text' to='/member/info'>{user.nickname}님</Link></li>
             </ul>    
         </>
     )
