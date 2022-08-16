@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {React } from 'react';
 import {Link, useHistory} from 'react-router-dom'
 import './header.css'
-import {API_URL} from '../properties.js'
 
 export default function Header(){
 
@@ -33,6 +32,8 @@ export default function Header(){
 
     },[]);
 
+    
+
 
 
     if(isLoggedIn){
@@ -45,6 +46,12 @@ export default function Header(){
         <>
         <div className='header-container'>
             <nav className='header-nav'>
+                <ul className='category-ul'>
+                    <li className='category-li'><Link className='li-link' to="/">메인</Link></li>
+                    <li className='category-li'><Link className='li-link' to="/news">뉴스</Link></li>
+                    <li className='category-li'><Link className='li-link' to="/reviews">리뷰</Link></li>
+                    <li className='category-li'><Link className='li-link' to="/games">게임게시판</Link></li>
+                </ul>
                 {header}
             </nav>
         </div>
