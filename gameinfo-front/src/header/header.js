@@ -11,22 +11,32 @@ export default function Header(){
 
     const [isLoggedIn, setLoggedIn] = useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
-    
+    const [isAuth, setAuth] = useState(false);
     let header;
-
 
     useEffect(() => {
         if(user !== null){
             setLoggedIn(true);
+
+            axios.get("/api/user/is-manage",{  // useEffect를 통해 동기 호출 => useState 변경으로 인해 재렌더링
+                headers:{
+                    'Authorization': 'Bearer ' + user.token
+                }
+            })
+            .then(res => {
+                setAuth(res.data)
+            })
+            
         } else{
             setLoggedIn(false);
         }
 
-    });
+    },[]);
+
 
 
     if(isLoggedIn){
-        header = <LoginHeader user={user} setLoggedIn={setLoggedIn}/>
+        header = <LoginHeader user={user} auth={isAuth} setLoggedIn={setLoggedIn}/>
     } else{
         header = <NotLoginHeader />
     }
@@ -45,11 +55,11 @@ export default function Header(){
 }
 
 
-
 function LoginHeader(props){
 
     const history = useHistory();
     const user = props.user;
+    let manage;
 
     const logout = async () => {
         
@@ -71,13 +81,15 @@ function LoginHeader(props){
 
     };
 
-
-
     return (
         <>
+
             <ul className='header-ul'>
-                <li className='header-item ' ><button onClick={logout}>로그아웃</button></li>
+                <li className='header-item' ><button onClick={logout}>로그아웃</button></li>
                 <li className='header-item'><Link className='header item text' to='/member/info'>{user.nickname}님</Link></li>
+                {props.auth &&
+                    <li className='header-item'><Link className='header item text' to='/manage'>관리자 페이지</Link></li>
+                }
             </ul>    
         </>
     )
@@ -93,3 +105,5 @@ function NotLoginHeader(props){
         </>
     )
 }
+
+

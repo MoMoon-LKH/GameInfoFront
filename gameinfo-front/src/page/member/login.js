@@ -51,7 +51,9 @@ function Login(){
 
     })
     .catch(e =>{
-        alert(e)
+        if(e.response.status == 403){
+            document.getElementsByClassName('error_txt')[0].style.display = 'block'
+        }
     })
 
     e.preventDefault();
@@ -65,13 +67,25 @@ function Login(){
             <form className='login-form' onSubmit={handleSubmit}>
                 <div className='login-div'>
                     <div className='login-form-div'>
-                        <div id='login-form-subtitle'>GameInfo</div>
+                        <div id='login-form-subtitle'><Link style={{
+                            textDecoration: 'none',
+                            color: 'black'
+                        }} to='/'>GameInfo</Link></div>
                     </div>
                     <div className='login-div'>
-                        <div><input name="memberId" className='login-input' type='text' onChange={handleChange} placeholder='아이디를 입력해주세요'></input></div>
+                        <div className='input-div'><input name="memberId" className='login-input' type='text' onChange={handleChange} placeholder='아이디를 입력해주세요'></input></div>
                     </div>
                     <div className='login-div'>
-                        <div><input name='password' className='login-input' type='password' onChange={handleChange} placeholder='비밀번호를 입력해주세요'></input></div>
+                        <div className='input-div'><input name='password' className='login-input' type='password' onChange={handleChange} placeholder='비밀번호를 입력해주세요'></input></div>
+                    </div>
+                    <div className='login-div'>
+                        <div className='error_txt' style={{
+                            display: 'none',
+                            color: 'red',
+                            fontSize: '14px',
+                            
+                        }}>아이디 혹은 비밀번호를 잘못 입력했습니다</div>
+
                     </div>
 
                     <div className='login-div text'>

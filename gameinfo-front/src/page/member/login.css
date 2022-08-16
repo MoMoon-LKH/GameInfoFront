@@ -24,6 +24,10 @@
     color: black;
 }
 
+.input-div{
+    text-align: center;
+}
+
 
 #login-form-subtitle{
     font-weight: bold;
@@ -31,6 +35,7 @@
     text-align: center;
     margin-bottom: 20px;
     color: black;
+    
 }
 
 #login-button{

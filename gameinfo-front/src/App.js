@@ -28,6 +28,7 @@ function App() {
         <Route path='/reviews'><Reviews></Reviews></Route>
         <Route path='/post/create'><CreatePost></CreatePost></Route>
         </>
+        <></>
       </Switch>
     </div>
   );
