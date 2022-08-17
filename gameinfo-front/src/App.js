@@ -13,6 +13,7 @@ import ManageGame from './page/manage/manageGame';
 import ManagePlatform from './page/manage/managePlatform';
 import ManageGenre from './page/manage/manageGenre';
 import CreateGame from './page/manage/createGame';
+import ReactModal from 'react-modal';
 
 function App() {
 
