@@ -39,7 +39,7 @@ function Login(){
             "token": res.data.accessToken
         }
 
-        localStorage.setItem("user", JSON.stringify(data))
+        sessionStorage.setItem("user", JSON.stringify(data))
 
 
         axios.defaults.headers.common[

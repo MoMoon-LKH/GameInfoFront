@@ -9,7 +9,7 @@ export default function Header(){
 
 
     const [isLoggedIn, setLoggedIn] = useState(false);
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(sessionStorage.getItem("user"));
     const [isAuth, setAuth] = useState(false);
     let header;
 
@@ -78,7 +78,7 @@ function LoginHeader(props){
         })
         .then(result => {
             props.setLoggedIn(false);
-            localStorage.clear();
+            sessionStorage.clear();
             alert("로그아웃이 정상적으로 이루어졌습니다.")
             history.push("/");
         })
