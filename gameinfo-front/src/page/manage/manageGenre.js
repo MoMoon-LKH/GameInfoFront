@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom"
 import {Table } from 'react-bootstrap'
 import ReactModal from "react-modal";
 import axios from "axios";
@@ -8,7 +8,8 @@ import axios from "axios";
 export default function ManageGenre(){
 
     const [inputs, setInputs] = useState({
-        search: ""
+        search: "",
+        name: ""
     });
 
     const [genres, setGenres] = useState([])
@@ -25,20 +26,26 @@ export default function ManageGenre(){
         e.preventDefault();
     };
 
-    useEffect(() =>{
-         axios.get("/api/manage/genre/list", {
-            headers:{
-                'Authorization': 'Bearer ' + user.token
-            }
-         })
-        .then((res) => {
-            setGenres(res.data)
+    const handleGenreList = e => {axios.get("/api/manage/genre/list", {
+        headers:{
+            'Authorization': 'Bearer ' + user.token
+        }
         })
+    .then((res) => {
+        setGenres(res.data)
+    })
+}
 
+    useEffect(() =>{
+        handleGenreList();        
     }, []);
     
     const handleSearch = e =>{
-        axios.get("/api/manage/genre/search?search=" + inputs.search)
+        axios.get("/api/manage/genre/search?search=" + inputs.search, {
+            headers:{
+                'Authorization': 'Bearer ' + user.token
+            }
+            })
         .then( res => {
             setGenres(res.data)
             e.preventDefault();
@@ -109,7 +116,7 @@ export default function ManageGenre(){
                     },
                   }}
             >
-                <CreateGenreModal onClose={onClose} handleInputs={handleInputs}/>
+                <CreateGenreModal onClose={onClose} handleInputs={handleInputs} inputs={inputs} handleGenreList={handleGenreList} user={user}/>
             </ReactModal>
         </div>
         </>
@@ -120,15 +127,27 @@ export default function ManageGenre(){
 function CreateGenreModal(props){
 
     const createGenre = e => {
-        
-        alert("성공적으로 추가되었습니다.")
-        props.onClose();
+        axios.post("/api/manage/genre/new",{
+            name: props.inputs.name
+        }, {
+            headers:{
+                'Authorization': 'Bearer ' + props.user.token
+            }
+            })
+        .then( res =>{
+            alert(res.data + " 성공적으로 추가되었습니다.");
+            props.onClose();
+            props.handleGenreList();
+        }).catch(error =>{
+            alert("장르 추가에 실패하였습니다.")
+        })
+
     }
 
     return <>
         <div>
             <div>추가할 장르 이름</div>
-            <input type='text' onChange={props.handleInputs}/>
+            <input type='text' name="name" onChange={props.handleInputs}/>
             <div>
                 <button onClick={createGenre}>추가</button><button onClick={props.onClose}>취소</button>
             </div>
