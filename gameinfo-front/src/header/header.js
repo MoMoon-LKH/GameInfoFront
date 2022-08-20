@@ -24,6 +24,8 @@ export default function Header(){
             })
             .then(res => {
                 setAuth(res.data)
+            }).catch(error => {
+                
             })
             
         } else{
@@ -50,7 +52,7 @@ export default function Header(){
                     <li className='category-li'><Link className='li-link' to="/">메인</Link></li>
                     <li className='category-li'><Link className='li-link' to="/news">뉴스</Link></li>
                     <li className='category-li'><Link className='li-link' to="/reviews">리뷰</Link></li>
-                    <li className='category-li'><Link className='li-link' to="/games">게임게시판</Link></li>
+                    <li className='category-li'><Link className='li-link' to="/games">게임</Link></li>
                 </ul>
                 {header}
             </nav>

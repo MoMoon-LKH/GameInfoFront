@@ -42,9 +42,7 @@ export default function ManageGenre(){
     
     const handleSearch = e =>{
         axios.get("/api/manage/genre/search?search=" + inputs.search, {
-            headers:{
-                'Authorization': 'Bearer ' + user.token
-            }
+            
             })
         .then( res => {
             setGenres(res.data)

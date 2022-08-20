@@ -33,25 +33,25 @@ function Login(){
         axios.post("/api/auth/login", inputs, header)
         .then(res => {
         
-        const data = {
-            "id": res.data.id,
-            "nickname": res.data.nickname,
-            "token": res.data.accessToken
-        }
+            const data = {
+                "id": res.data.id,
+                "nickname": res.data.nickname,
+                "token": res.data.accessToken 
+            }
 
-        sessionStorage.setItem("user", JSON.stringify(data))
+            sessionStorage.setItem("user", JSON.stringify(data))
 
 
-        axios.defaults.headers.common[
-            "Authorization"  
-        ] = 'Bearer ' + res.data.accessToken;
+            axios.defaults.headers.common[
+                "Authorization"  
+            ] = 'Bearer ' + res.data.accessToken;
 
-        
-        history.goBack();
+            
+            history.goBack();
 
     })
     .catch(e =>{
-        if(e.response.status == 403){
+        if(e.response.status == 401){
             document.getElementsByClassName('error_txt')[0].style.display = 'block'
         }
     })
