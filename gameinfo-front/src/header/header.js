@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import {React } from 'react';
 import {Link, useHistory} from 'react-router-dom'
+import accessClient from '../refresh';
 import './header.css'
 
 export default function Header(){
@@ -13,20 +14,21 @@ export default function Header(){
     const [isAuth, setAuth] = useState(false);
     let header;
 
-    useEffect(() => {
-        if(user !== null){
-            setLoggedIn(true);
 
-            axios.get("/api/user/is-manage",{  // useEffect를 통해 동기 호출 => useState 변경으로 인해 재렌더링
-                headers:{
-                    'Authorization': 'Bearer ' + user.token
-                }
-            })
+    const handleManage = async e => {
+        accessClient.get("/api/user/is-manage")  // useEffect를 통해 동기 호출 => useState 변경으로 인해 재렌더링
             .then(res => {
                 setAuth(res.data)
             }).catch(error => {
                 
             })
+    }
+
+    useEffect(() => {
+        if(user !== null){
+            setLoggedIn(true);
+
+            handleManage();
             
         } else{
             setLoggedIn(false);
@@ -73,7 +75,7 @@ function LoginHeader(props){
     const logout = async () => {
         
 
-        axios.post("/api/user/logout",{},{
+        accessClient.post("/api/user/logout",{},{
             headers:{
                 'Authorization': 'Bearer ' + user.token
             }

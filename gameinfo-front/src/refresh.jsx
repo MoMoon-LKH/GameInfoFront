@@ -1,28 +1,30 @@
 import axios, {AxiosRequestConfig} from "axios"
-import {useCookies} from 'react-cookie'
-import { useHistory } from "react-router-dom";
-import Cookies from "react-cookie";
+import { useState } from "react";
 
 
 export const accessClient = axios.create({
-    baseURL: 'https://localhost:443/',
+    baseURL: 'https://localhost:443',
 })
+
+
 
 accessClient.interceptors.request.use(
     function(config){
         const token = JSON.parse(sessionStorage.getItem("user")).token;
-        console.log("interceptor request")
+        
+        console.log(token);
        
         if(token){
-            config.headers["Authorization"] = 'Bearer ' + token; 
+            config.headers["Authorization"] = 'Bearer ' + token;
         }
 
         return config;
     },
     function(err){
-        return Promise.reject(error);
+        return Promise.reject(err);
     }
 )
+
 
 
 accessClient.interceptors.response.use(
@@ -33,30 +35,44 @@ accessClient.interceptors.response.use(
 
     async function (err) {
 
-        const history = useHistory();
-
         try{
             if(err.response.status === 401){
-                const access = await axios.post("/api/auth/re-access")
-                .then(response => {
-                    const data = JSON.parse(sessionStorage.getItem("user"));
-                    data.token = response.headers.get("Authorization").replace("Bearer ", "");
-                    sessionStorage.setItem("user", JSON.stringify(data));
-                    
-                    
 
-                    return await axios.request();
-                }).catch(err => {
-                    const [cookies, , removeCookie] = useCookies(['gameinfo'])
-                    sessionStorage.clear();
-                    removeCookie("gameinfo");
+                const origianlConfig = err.config;
+                
+
+                const access = await axios.post("/api/auth/re-access?access=" + JSON.parse(sessionStorage.getItem("user")).token  ,{
                     
-                // history.push("/login")
-                })
+                }, {
+                    withCredentials: true
+                });
+                
+
+                const user = JSON.parse(sessionStorage.getItem("user"));
+                const token = access.headers.authorization.replace("Bearer ", "");                
+                const userData = {
+                    "id": user.id,
+                    "nickname": user.nickname,
+                    "token": token 
+            
+                }
+                
+                sessionStorage.setItem("user", JSON.stringify(userData));
+                console.log("reaccess : " + JSON.parse(sessionStorage.getItem("user")).token)
+
+                origianlConfig.headers = {
+                    Authorization: 'Bearer ' + token
+                }
+
+                return await accessClient.request(origianlConfig);
             }
 
         } catch{
-           // history.push("/login")
+            console.log("access fail");
+
+            sessionStorage.clear();
+            //document.location.href = "/login"
+           
             return Promise.reject(err);
         }
         return Promise.reject(err);

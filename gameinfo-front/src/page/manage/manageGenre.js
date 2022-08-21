@@ -3,7 +3,7 @@ import { Link, Redirect } from "react-router-dom"
 import {Table } from 'react-bootstrap'
 import ReactModal from "react-modal";
 import axios from "axios";
-
+import accessClient from "../../refresh";
 
 export default function ManageGenre(){
 
@@ -26,10 +26,8 @@ export default function ManageGenre(){
         e.preventDefault();
     };
 
-    const handleGenreList = e => {axios.get("/api/manage/genre/list", {
-        headers:{
-            'Authorization': 'Bearer ' + user.token
-        }
+    const handleGenreList = async e => {
+        accessClient.get("/api/manage/genre/list", {
         })
     .then((res) => {
         setGenres(res.data)
@@ -41,7 +39,7 @@ export default function ManageGenre(){
     }, []);
     
     const handleSearch = e =>{
-        axios.get("/api/manage/genre/search?search=" + inputs.search, {
+        accessClient.get("/api/manage/genre/search?search=" + inputs.search, {
             
             })
         .then( res => {
@@ -125,7 +123,7 @@ export default function ManageGenre(){
 function CreateGenreModal(props){
 
     const createGenre = e => {
-        axios.post("/api/manage/genre/new",{
+        accessClient.post("/api/manage/genre/new",{
             name: props.inputs.name
         }, {
             headers:{
