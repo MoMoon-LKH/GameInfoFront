@@ -12,7 +12,6 @@ accessClient.interceptors.request.use(
     function(config){
         const token = JSON.parse(sessionStorage.getItem("user")).token;
         
-        console.log(token);
        
         if(token){
             config.headers["Authorization"] = 'Bearer ' + token;
@@ -58,7 +57,6 @@ accessClient.interceptors.response.use(
                 }
                 
                 sessionStorage.setItem("user", JSON.stringify(userData));
-                console.log("reaccess : " + JSON.parse(sessionStorage.getItem("user")).token)
 
                 origianlConfig.headers = {
                     Authorization: 'Bearer ' + token
@@ -71,7 +69,7 @@ accessClient.interceptors.response.use(
             console.log("access fail");
 
             sessionStorage.clear();
-            //document.location.href = "/login"
+            document.location.href = "/login"
            
             return Promise.reject(err);
         }

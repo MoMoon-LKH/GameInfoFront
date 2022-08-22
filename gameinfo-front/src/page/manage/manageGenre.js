@@ -16,7 +16,7 @@ export default function ManageGenre(){
     const [page, setPage] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
     const user = JSON.parse(sessionStorage.getItem("user"));
-
+    const [checkedList, setCheckedList] = useState(new Set());
    
     const handleInputs = e =>{
         setInputs({
@@ -29,10 +29,24 @@ export default function ManageGenre(){
     const handleGenreList = async e => {
         accessClient.get("/api/manage/genre/list", {
         })
-    .then((res) => {
-        setGenres(res.data)
-    })
-}
+        .then((res) => {
+            setGenres(res.data)
+        })
+    };
+
+    const handleChecked = (checked, id) => {
+        if (checked) {
+            checkedList.add(id);
+            setCheckedList(checkedList);
+        } else if (!checked) {
+            checkedList.delete(id);
+            setCheckedList(checkedList);
+        }
+        console.log(checkedList);
+
+    }
+
+
 
     useEffect(() =>{
         handleGenreList();        
@@ -71,13 +85,15 @@ export default function ManageGenre(){
                     <input id='search-input' name="search" value={inputs.search}  type='text' onChange={handleInputs} placeholder="검색할 내용을 입력해주세요." />
                     <button onClick={handleSearch}>검색</button>
                     <button onClick={onPopup}>추가</button>
+                    <button>수정</button>
+                    <button>삭제</button>
                 </div>
                 <div className="main-table">
                     <Table className="table">
                         <tbody>
                             {genres.map(({id, name}) =>(
                                <tr>
-                                <td>{id}</td>
+                                <td><input type='checkbox' value={id} onChange={e => {handleChecked(e.target.checked, e.target.value)}}  />{id}</td>
                                 <td>{name}</td>
                                </tr> 
                             ))}
