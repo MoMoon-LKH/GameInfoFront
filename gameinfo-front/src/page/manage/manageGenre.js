@@ -36,14 +36,28 @@ export default function ManageGenre(){
 
     const handleChecked = (checked, id) => {
         if (checked) {
-            checkedList.add(id);
+            checkedList.add(parseInt(id));
             setCheckedList(checkedList);
         } else if (!checked) {
             checkedList.delete(id);
             setCheckedList(checkedList);
         }
-        console.log(checkedList);
 
+    }
+
+    const handleGenreDelete = e => {
+
+        accessClient.delete("/api/manage/genre", {
+            data: {
+                ids: Array.from(checkedList)
+            } 
+        }).then( response => {
+            if(response.data){
+                handleGenreList();
+                
+            }
+
+        })
     }
 
 
@@ -86,7 +100,7 @@ export default function ManageGenre(){
                     <button onClick={handleSearch}>검색</button>
                     <button onClick={onPopup}>추가</button>
                     <button>수정</button>
-                    <button>삭제</button>
+                    <button onClick={handleGenreDelete}>삭제</button>
                 </div>
                 <div className="main-table">
                     <Table className="table">
