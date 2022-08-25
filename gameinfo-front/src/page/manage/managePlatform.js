@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState} from "react"
 import { Link } from "react-router-dom"
 import accessClient from "../../refresh"
 import { Table } from "react-bootstrap";
@@ -14,16 +14,18 @@ export default function ManagePlatform(){
         name: "",
         search: ""
     });
-
+    const [checkList, setCheckList] = useState(new Set());
+    const [updatePlatform, setUpdatePlatform] = useState({
+        id: '',
+        name: ''
+    })
 
     const handleInputs = e =>{
         setInputs({
             ...inputs,
             [e.target.name]: e.target.value
         })
-
-        console.log("inputs: " + inputs.name)
-
+    
         e.preventDefault();
     };
 
@@ -39,13 +41,55 @@ export default function ManagePlatform(){
         alert(inputs.search);
     }
 
-    useEffect(() => {
-        handlePlatformList();
-    }, [])
+    const handleCheck = e =>{
+        if(e.target.checked){
+            checkList.add(e.target.value);
+            setCheckList(checkList)
+        } else{
+            checkList.delete(e.target.value);
+            setCheckList(checkList)
+        }
+    }
 
-    const updateBtn = () => {
-        setUpdateModal(true);
-        onPopup();
+    
+
+    const handleUpdate = () => {
+        if(checkList.size === 1){
+            let id = Array.from(checkList)[0];
+            let name = document.getElementById('table-name' + id).innerHTML;
+
+            setUpdatePlatform({
+                id: id,
+                name: name
+            })
+            setUpdateModal(true);
+            onPopup(); 
+           
+
+        } else if(checkList.size < 1){
+            alert("수정할 플랫폼을 선택해주세요")
+        } else{
+            alert("하나만 선택해주세요")
+        }
+        
+    }
+
+
+    const handleDelete = () => {
+        if(checkList.size > 0){
+            accessClient.delete("/api/manage/platform",{
+                data: {
+                    ids: Array.from(checkList)
+                }
+            }).then(res => {
+                alert("삭제에 성공했습니다.")
+                handlePlatformList();
+            }).catch(err => {
+                alert("삭제에 실패했습니다 ")
+            })
+        } else{
+            alert("삭제할 플랫폼을 하나 이상 선택해주세요")
+        }
     }
 
     const onPopup = () => {
@@ -55,6 +99,13 @@ export default function ManagePlatform(){
     const onClose = () => {
         setModalVisible(false);
     }
+
+
+
+    useEffect(() => {
+        handlePlatformList();
+    }, [])
+
 
     return (
         <>
@@ -68,15 +119,15 @@ export default function ManagePlatform(){
                     <input type='text' name="search" onChange={handleInputs}/>
                     <button onClick={handleSearch}>검색</button>
                     <button onClick={onPopup}>추가</button>
-                    <button onClick={updateBtn}>수정</button>
-                    <button>삭제</button>
+                    <button onClick={handleUpdate}>수정</button>
+                    <button onClick={handleDelete}>삭제</button>
                 </div>
                 <Table>
                     <tbody>
                         {platforms.map(({id, name})=>(
                             <tr key={id}>
-                                <td><input type='checkbox' value={id}/></td>
-                                <td>{name}</td>
+                                <td><input type='checkbox' value={id} onChange={handleCheck}/>{id}</td>
+                                <td id={'table-name' + id}>{name}</td>
                             </tr>
                         ))}
 
@@ -110,9 +161,9 @@ export default function ManagePlatform(){
                     },
                   }}
             >   {updateModal ?
-                    <UpdatePlatformModal onClose={onClose} setUpdateModal={setUpdateModal}/>
+                    <UpdatePlatformModal onClose={onClose} setUpdateModal={setUpdateModal} platform={updatePlatform} handlePlatformList={handlePlatformList}/>
                     :
-                    <CreatePlatformModal  onClose={onClose} handleInputs={handleInputs} inputs={inputs} handlePlatformList={handlePlatformList}/>
+                    <CreatePlatformModal  onClose={onClose}  handlePlatformList={handlePlatformList}/>
                 }
             </ReactModal>
         </div>
@@ -122,17 +173,45 @@ export default function ManagePlatform(){
 
     function UpdatePlatformModal(props){
 
+        const [input, setInput] = useState();
+
+
+        const handleInput = e => {
+            setInput({...input,
+                [e.target.name]: e.target.value})
+            e.preventDefault();
+        }
 
         const cancel = e => {
             props.setUpdateModal(false);
             props.onClose();
         }
+        
+
+        const handleUpdateInput = e =>{
+
+            if(input.name !== null){
+                accessClient.put("/api/manage/platform",{
+                    id: props.platform.id,
+                    name: input.name
+                }).then(res => {
+                    alert(props.platform.name + "가 " + res.data.name + "로 변경되었습니다")
+                    cancel();
+                    props.handlePlatformList();
+                })      
+            }
+            
+        }
 
         return <>
-            <div>update</div>
-            <div><button>수정</button><button onClick={cancel}>취소</button></div>
+            <div>플랫폼 수정</div>
+            <div>수정할 플랫폼: {props.platform.name}</div>
+            <div><input type='text' name="name" onChange={handleInput}/></div>
+            <div><button onClick={handleUpdateInput}>수정</button><button onClick={cancel}>취소</button></div>
         </>
     }
+
+
 
     function CreatePlatformModal(props){
         
@@ -160,16 +239,12 @@ export default function ManagePlatform(){
             }
             
         }
-
-
-        const cancel = e =>{
-            props.onClose();
-        }
+      
 
         return <>
             <div>플랫폼 추가</div>
             <div>추가할 이름: <input type='text' name="name" onChange={handleInput}/></div>
-            <div><button onClick={create}>추가</button><button onClick={cancel}>취소</button></div>
+            <div><button onClick={create}>추가</button><button onClick={props.onClose}>취소</button></div>
 
         </>
     }
