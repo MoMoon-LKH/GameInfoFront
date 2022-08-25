@@ -76,9 +76,7 @@ function LoginHeader(props){
         
 
         accessClient.post("/api/user/logout",{},{
-            headers:{
-                'Authorization': 'Bearer ' + user.token
-            }
+          withCredentials: true
         })
         .then(result => {
             props.setLoggedIn(false);
