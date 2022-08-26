@@ -35,10 +35,16 @@ export default function ManagePlatform(){
         .then(res => {
             setPlatforms(res.data);
         })
+
     }
 
     const handleSearch = e => {
-        alert(inputs.search);
+       
+        accessClient.get("/api/manage/platform/search?search=" + inputs.search)
+        .then(res => {
+            setPlatforms(res.data);
+        })
+    
     }
 
     const handleCheck = e =>{
@@ -126,7 +132,7 @@ export default function ManagePlatform(){
                     <tbody>
                         {platforms.map(({id, name})=>(
                             <tr key={id}>
-                                <td><input type='checkbox' value={id} onChange={handleCheck}/>{id}</td>
+                                <td><input type='checkbox' value={id} onChange={handleCheck}/></td>
                                 <td id={'table-name' + id}>{name}</td>
                             </tr>
                         ))}
