@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { Table } from "react-bootstrap"
 import { Link } from "react-router-dom"
+import accessClient from "../../refresh";
+import axios from "axios";
 
 export default function ManageGame(){
 
@@ -8,7 +10,6 @@ export default function ManageGame(){
         search: ''
     });
     const [games, setGames] = useState([]);
-    
 
 
     const handleInput = e => {
@@ -22,12 +23,23 @@ export default function ManageGame(){
     }
 
     const handleGameList = e => {
+        axios.get("/api/all/games/list")
+        .then(res => {
+            setGames(res.data)
+        })
 
     }
 
+    const haddleSearch = e => {
+        axios.get("/api/all/games/search?search" + input.search)
+        .then(res => {
+            setGames(res.data);
+        })
+    }
+
     useEffect(() => {
-        
-    })
+        handleGameList();
+    }, [])
 
     return (
         <>
@@ -41,9 +53,12 @@ export default function ManageGame(){
             </div>
             <div>
                 <Table>
-                    <tbody></tbody>
+                    <tbody>
+
+                    </tbody>
                 </Table>
             </div>
+            
         </div>
         </>
     )
