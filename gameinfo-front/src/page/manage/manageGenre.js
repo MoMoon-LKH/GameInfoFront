@@ -168,8 +168,8 @@ export default function ManageGenre(){
                       outline: "none",
                       padding: "20px",
                     },
-                  }}
-            >   {updateModal ?
+                  }}>   
+                  {updateModal ?
                     <UpdateGenreModal onClose={onClose} handleInputs={handleInputs} inputs={inputs} handleGenreList={handleGenreList} user={user} genre={updateGenre} setUpdateModal={setUpdateModal}/>
                     :
                     <CreateGenreModal onClose={onClose} handleInputs={handleInputs} inputs={inputs} handleGenreList={handleGenreList} user={user} />
