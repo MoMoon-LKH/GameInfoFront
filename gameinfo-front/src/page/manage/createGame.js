@@ -2,6 +2,7 @@ import accessClient from "../../refresh"
 import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import { Table } from "react-bootstrap";
+import userEvent from "@testing-library/user-event";
 
 export default function CreateGame(){
 
@@ -142,6 +143,12 @@ export default function CreateGame(){
     function GetGenresModal(props){
 
         const [input, setInput] = useState();
+        const [list, setList] = useState([]);
+        const [select, setSelect] = useState([]);
+        const [checked, setCheked] = useState({
+            id: '',
+            name: ''
+        });
 
         const handleInput = e => {
             setInput({
@@ -151,12 +158,57 @@ export default function CreateGame(){
         }
         
         const getList = e => {
+            accessClient.get("/api/manage/genre/list/all")
+            .then(res => {
+                setList(res.data);
+            })
+        }
 
+        const handleChecked =  e => {
+            let element = document.getElementsByClassName('list-td')
+            
+            for(var i = 0; i < element.length; i++)
+                element[i].style.background = 'white'
+
+            e.target.style.backgroundColor = 'gray'
+
+            setCheked({
+                id: e.target.getAttribute('val'),
+                name: e.target.getAttribute('name')
+            } )
         }
 
         useEffect(() => {
-            getList();
 
+        }, [checked])
+
+
+        const handleAddSelect = e => {
+            
+            console.log(select.find(item => item.id === checked.id))
+        
+           if(select.find(item => item.id === checked.id) === undefined)
+                setSelect([...select, checked])
+            else 
+                alert("이미 추가된 장르입니다.") 
+                 
+        } 
+
+        useEffect(() => {
+            console.log(select)
+        }, [select])
+
+        
+      
+
+        const handleDeleteSelect = e => {
+
+        }
+
+       
+        useEffect(() => {
+            getList();
+            
         }, [])
 
         return(
@@ -165,23 +217,39 @@ export default function CreateGame(){
                 <div>
                     <input name="search" onChange={handleInput}/><button>검색</button>
                 </div>
-                <div>
-                    <div>
-                        <Table>
-                        
+                <div style={{margin: "20px"}}>
+                    <div style={{display: 'inline-block', width: '200px', height: '220px', overflowY: 'scroll', border: "1px solid #444444", margin: '10px'}}>
+                        <Table >
+                            <tbody>
+                                {list.map(({id, name}) => (
+                                    <tr key={id} className="list-tr">
+                                        <td id={id} className="list-td" onClick={handleChecked} val={id} name={name}>{name}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
                         </Table>
                     </div>
-                    <div>
-                        <div>
-                            <button>&gt;</button>
-                        </div>
-                        <div>
-                            <button>&lt;</button>
+
+                    <div style={{display: 'inline-block'}}> 
+
+                        <div >
+                            <div>
+                                <button onClick={handleAddSelect}>&gt;</button>
+                            </div>
+                            <div>
+                                <button>&lt;</button>
+                            </div>
                         </div>
                     </div>
-                    <div>
+                    <div style={{display: 'inline-block', width: '200px', height: '220px', overflowY: 'scroll', border: "1px solid #444444", margin: '10px'}}>
                         <Table>
-
+                            <tbody>
+                               {select.map(({id, name}) => (
+                                    <tr key={id} className="list-tr">
+                                        <td className="list-td" onClick={handleChecked} val={id}>{name}</td>
+                                    </tr> 
+                               ))}
+                            </tbody>
                         </Table>
                     </div>
                 </div>
