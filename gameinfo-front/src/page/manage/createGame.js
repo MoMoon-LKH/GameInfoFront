@@ -8,8 +8,8 @@ export default function CreateGame(){
 
     const [inputs, setInputs] = useState();
     const [imgId, setImgId] = useState(null);
-    const [genres, setGenres] = useState({})
-    const [platforms, setPlatforms] = useState({});
+    const [genres, setGenres] = useState([])
+    const [platforms, setPlatforms] = useState([]);
     const [modalVisible, setModalVisible] = useState(false)
     const [genreModal, setGenreModal] = useState(false);
 
@@ -42,7 +42,7 @@ export default function CreateGame(){
 
     const genrePopUp = () => {
         setGenreModal(true);
-        popUP();
+        popUp();
 
     }
 
@@ -51,7 +51,7 @@ export default function CreateGame(){
         onClose();
     }
 
-    const popUP = () =>{
+    const popUp = () =>{
         setModalVisible(true);
     }
 
@@ -88,13 +88,29 @@ export default function CreateGame(){
                 <div className="input-div">
                     <div>장르 <button onClick={genrePopUp}>추가</button></div>
                     <div>
-                        <table></table>
+                        <Table>
+                            <tbody>
+                                {genres.map(({id, name}) => (
+                                    <tr>
+                                        <td val={id}>{name} <button>X</button></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
                     </div>
                 </div>
                 <div className="input-div">
-                    <div>플랫폼 <button onClick={popUP}>추가</button></div>
+                    <div>플랫폼 <button onClick={popUp}>추가</button></div>
                     <div>
-
+                        <Table>
+                            <tbody>
+                                {platforms.map(({id, name}) => (
+                                    <tr>
+                                        <td val={id}>{name} <button>X</button></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
                     </div>
                 </div>
                 <div className="input-div">
@@ -164,6 +180,19 @@ export default function CreateGame(){
             })
         }
 
+        const handleSearch = e => {
+            accessClient.get("/api/manage/genre/search/all?search=" + input.search)
+            .then(res => {
+                setList(res.data);
+            })
+        }
+
+        useEffect(() => {
+            getList();
+            
+        }, [])
+
+
         const handleChecked =  e => {
             let element = document.getElementsByClassName('list-td')
             
@@ -185,7 +214,6 @@ export default function CreateGame(){
 
         const handleAddSelect = e => {
             
-            console.log(select.find(item => item.id === checked.id))
         
            if(select.find(item => item.id === checked.id) === undefined)
                 setSelect([...select, checked])
@@ -194,28 +222,30 @@ export default function CreateGame(){
                  
         } 
 
-        useEffect(() => {
-            console.log(select)
-        }, [select])
-
-        
-      
 
         const handleDeleteSelect = e => {
-
+            const arr = select.filter((item) => item.id !== checked.id);
+            setSelect(arr)
         }
 
-       
-        useEffect(() => {
-            getList();
-            
-        }, [])
 
+        useEffect(() => {
+        }, [select])
+
+
+
+        const handleOk = () => {
+            props.setGenres(select)
+            props.onClose();
+        }
+
+        
+        
         return(
             <>
-                <div>장르 추가</div>
+                <div>장르</div>
                 <div>
-                    <input name="search" onChange={handleInput}/><button>검색</button>
+                    <input name="search" onChange={handleInput}/><button onClick={handleSearch}>검색</button>
                 </div>
                 <div style={{margin: "20px"}}>
                     <div style={{display: 'inline-block', width: '200px', height: '220px', overflowY: 'scroll', border: "1px solid #444444", margin: '10px'}}>
@@ -237,7 +267,7 @@ export default function CreateGame(){
                                 <button onClick={handleAddSelect}>&gt;</button>
                             </div>
                             <div>
-                                <button>&lt;</button>
+                                <button onClick={handleDeleteSelect}>&lt;</button>
                             </div>
                         </div>
                     </div>
@@ -253,19 +283,139 @@ export default function CreateGame(){
                         </Table>
                     </div>
                 </div>
-                <button>추가</button><button onClick={props.onClose}>취소</button>
+                <button onClick={handleOk}>추가</button><button onClick={props.onClose}>취소</button>
             </>
         )
         
     }
     
     function GetPlatformModal(props){
-    
+        const [input, setInput] = useState();
+        const [list, setList] = useState([]);
+        const [select, setSelect] = useState([]);
+        const [checked, setCheked] = useState({
+            id: '',
+            name: ''
+        });
 
-        return (
+        const handleInput = e => {
+            setInput({
+                ...input,
+                [e.target.name]: e.target.value
+            })
+        }
+        
+        const getList = e => {
+            accessClient.get("/api/manage/platform/list/all")
+            .then(res => {
+                setList(res.data);
+            })
+        }
+
+        const handleSearch = e => {
+            accessClient.get("/api/manage/platform/search/all?search=" + input.search)
+            .then(res => {
+                setList(res.data);
+            })
+        }
+
+        useEffect(() => {
+            getList();
+            
+        }, [])
+
+
+        const handleChecked =  e => {
+            let element = document.getElementsByClassName('list-td')
+            
+            for(var i = 0; i < element.length; i++)
+                element[i].style.background = 'white'
+
+            e.target.style.backgroundColor = 'gray'
+
+            setCheked({
+                id: e.target.getAttribute('val'),
+                name: e.target.getAttribute('name')
+            } )
+        }
+
+        useEffect(() => {
+
+        }, [checked])
+
+
+        const handleAddSelect = e => {
+            
+        
+           if(select.find(item => item.id === checked.id) === undefined)
+                setSelect([...select, checked])
+            else 
+                alert("이미 추가된 장르입니다.") 
+                 
+        } 
+
+
+        const handleDeleteSelect = e => {
+            const arr = select.filter((item) => item.id !== checked.id);
+            setSelect(arr)
+        }
+
+
+        useEffect(() => {
+        }, [select])
+
+
+
+        const handleOk = () => {
+            props.setPlatforms(select)
+            props.onClose();
+        }
+
+        
+        
+        return(
             <>
-                <div>플랫폼 모달</div>
-                <button>추가</button><button onClick={props.onClose}>취소</button>
+                <div>플랫폼</div>
+                <div>
+                    <input name="search" onChange={handleInput}/><button onClick={handleSearch}>검색</button>
+                </div>
+                <div style={{margin: "20px"}}>
+                    <div style={{display: 'inline-block', width: '200px', height: '220px', overflowY: 'scroll', border: "1px solid #444444", margin: '10px'}}>
+                        <Table >
+                            <tbody>
+                                {list.map(({id, name}) => (
+                                    <tr key={id} className="list-tr">
+                                        <td id={id} className="list-td" onClick={handleChecked} val={id} name={name}>{name}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </div>
+
+                    <div style={{display: 'inline-block'}}> 
+
+                        <div >
+                            <div>
+                                <button onClick={handleAddSelect}>&gt;</button>
+                            </div>
+                            <div>
+                                <button onClick={handleDeleteSelect}>&lt;</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{display: 'inline-block', width: '200px', height: '220px', overflowY: 'scroll', border: "1px solid #444444", margin: '10px'}}>
+                        <Table>
+                            <tbody>
+                               {select.map(({id, name}) => (
+                                    <tr key={id} className="list-tr">
+                                        <td className="list-td" onClick={handleChecked} val={id}>{name}</td>
+                                    </tr> 
+                               ))}
+                            </tbody>
+                        </Table>
+                    </div>
+                </div>
+                <button onClick={handleOk}>추가</button><button onClick={props.onClose}>취소</button>
             </>
         )
     }
