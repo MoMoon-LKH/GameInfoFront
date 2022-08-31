@@ -3,16 +3,18 @@ import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import { Table } from "react-bootstrap";
 import userEvent from "@testing-library/user-event";
+import { useHistory } from "react-router-dom";
 
 export default function CreateGame(){
 
     const [inputs, setInputs] = useState();
-    const [imgId, setImgId] = useState(null);
     const [genres, setGenres] = useState([])
     const [platforms, setPlatforms] = useState([]);
     const [modalVisible, setModalVisible] = useState(false)
     const [genreModal, setGenreModal] = useState(false);
-
+    const [genresIds, setGenresIds] = useState([]);
+    const [platformIds, setPlatformIds] = useState([])
+    const history = useHistory();
 
     const handleInputs = e => {
         setInputs({
@@ -38,6 +40,29 @@ export default function CreateGame(){
             console.log(document.getElementById("input-image").value)
 
         })
+    }
+
+    const handleCreate = e => {
+
+        const data = {
+            img_id: parseInt(document.getElementById('input-image').value),
+            name: inputs.name,
+            company: inputs.company,
+            release_data: document.getElementById('release_date').value,
+            genres: genresIds,
+            platforms: platformIds,
+            introduction: inputs.introduction
+        }
+
+        accessClient.post("/api/manage/games/new", data)
+        .then(res => {
+            alert(res.data.name + "가 정상적으로 저장되었습니다." )
+            history.push("/manage/game")
+        }).catch(error => {
+            alert(error)
+        })
+
+        e.preventDefault();
     }
 
     const genrePopUp = () => {
@@ -76,14 +101,14 @@ export default function CreateGame(){
                     <input type='file' name='image' onChange={handleImg} />
                 </div>
                 <div className="input-div">
-                    <span>이름: </span><input type='text' name='name' onChange={handleInputs}/>
+                    <span>게임명: </span><input type='text' name='name' onChange={handleInputs}/>
                 </div>
                 
                 <div className="input-div">
                     <span>개발사: </span><input type='text' name='company' onChange={handleInputs}/>
                 </div>
                 <div className="input-div">
-                    <span>발매일: </span><input type='date' name='release_date' onChange={handleInputs}/>
+                    <span>발매일: </span><input type='date' name='release_date' id="release_date"/>
                 </div>
                 <div className="input-div">
                     <div>장르 <button onClick={genrePopUp}>추가</button></div>
@@ -91,7 +116,7 @@ export default function CreateGame(){
                         <Table>
                             <tbody>
                                 {genres.map(({id, name}) => (
-                                    <tr>
+                                    <tr key={id}>
                                         <td val={id}>{name} <button>X</button></td>
                                     </tr>
                                 ))}
@@ -105,7 +130,7 @@ export default function CreateGame(){
                         <Table>
                             <tbody>
                                 {platforms.map(({id, name}) => (
-                                    <tr>
+                                    <tr key={id}>
                                         <td val={id}>{name} <button>X</button></td>
                                     </tr>
                                 ))}
@@ -117,7 +142,7 @@ export default function CreateGame(){
                     <div>소개말</div>
                     <textarea name='introduction' onChange={handleInputs} />
                 </div>
-                <div><button>추가</button> <button>취소</button></div>
+                <div><button onClick={handleCreate}>추가</button> <button>취소</button></div>
             </div>
 
             <ReactModal isOpen={modalVisible} 
@@ -146,9 +171,9 @@ export default function CreateGame(){
                     },
                   }}>
                 {genreModal ?
-                    <GetGenresModal onClose={genreOnClose} setGenres={setGenres}/>
+                    <GetGenresModal onClose={genreOnClose} setGenres={setGenres} setGenresIds={setGenresIds}/>
                     :
-                    <GetPlatformModal onClose={onClose} setPlatforms={setPlatforms}/>
+                    <GetPlatformModal onClose={onClose} setPlatforms={setPlatforms} setPlatformIds={setPlatformIds}/>
                 }
             </ReactModal>
         </div>
@@ -161,6 +186,7 @@ export default function CreateGame(){
         const [input, setInput] = useState();
         const [list, setList] = useState([]);
         const [select, setSelect] = useState([]);
+        const [selectId, setSelectId] = useState([]);
         const [checked, setCheked] = useState({
             id: '',
             name: ''
@@ -205,6 +231,8 @@ export default function CreateGame(){
                 id: e.target.getAttribute('val'),
                 name: e.target.getAttribute('name')
             } )
+
+        
         }
 
         useEffect(() => {
@@ -215,8 +243,10 @@ export default function CreateGame(){
         const handleAddSelect = e => {
             
         
-           if(select.find(item => item.id === checked.id) === undefined)
+           if(select.find(item => item.id === checked.id) === undefined){
                 setSelect([...select, checked])
+                setSelectId([...selectId, parseInt(checked.id)])
+           }
             else 
                 alert("이미 추가된 장르입니다.") 
                  
@@ -225,17 +255,23 @@ export default function CreateGame(){
 
         const handleDeleteSelect = e => {
             const arr = select.filter((item) => item.id !== checked.id);
+            const idArr = selectId.filter((item) => item !== checked.id);
             setSelect(arr)
+            setSelectId(idArr)
+
         }
 
 
         useEffect(() => {
         }, [select])
 
+        useEffect(() => {
+        }, [selectId])
 
 
         const handleOk = () => {
             props.setGenres(select)
+            props.setGenresIds(selectId);
             props.onClose();
         }
 
@@ -293,6 +329,7 @@ export default function CreateGame(){
         const [input, setInput] = useState();
         const [list, setList] = useState([]);
         const [select, setSelect] = useState([]);
+        const [selectId, setSelectId] = useState([]);
         const [checked, setCheked] = useState({
             id: '',
             name: ''
@@ -347,27 +384,33 @@ export default function CreateGame(){
         const handleAddSelect = e => {
             
         
-           if(select.find(item => item.id === checked.id) === undefined)
+           if(select.find(item => item.id === checked.id) === undefined){
                 setSelect([...select, checked])
-            else 
-                alert("이미 추가된 장르입니다.") 
+                setSelectId([...selectId, parseInt(checked.id)])
+            } else 
+                alert("이미 추가된 플랫폼입니다.") 
                  
         } 
 
 
         const handleDeleteSelect = e => {
             const arr = select.filter((item) => item.id !== checked.id);
+            const idArr = selectId.filter((item) => item !== checked.id);
             setSelect(arr)
+            setSelectId(idArr)
         }
 
 
         useEffect(() => {
         }, [select])
+        useEffect(() => {
+        }, [selectId])
 
 
 
         const handleOk = () => {
             props.setPlatforms(select)
+            props.setPlatformIds(selectId)
             props.onClose();
         }
 
