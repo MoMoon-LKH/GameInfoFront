@@ -3,6 +3,7 @@ import { Table } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import accessClient from "../../refresh";
 import axios from "axios";
+import moment from "moment";
 
 export default function ManageGame(){
 
@@ -18,9 +19,6 @@ export default function ManageGame(){
         })
     }
 
-    const handleSearch = e => {
-        alert(input.search);
-    }
 
     const handleGameList = e => {
         axios.get("/api/all/games/list")
@@ -30,8 +28,8 @@ export default function ManageGame(){
 
     }
 
-    const haddleSearch = e => {
-        axios.get("/api/all/games/search?search" + input.search)
+    const handleSearch = e => {
+        axios.get("/api/all/games/search?search=" + input.search)
         .then(res => {
             setGames(res.data);
         })
@@ -52,9 +50,20 @@ export default function ManageGame(){
                 <button><Link to='/manage/game/create'>추가</Link></button>
             </div>
             <div>
-                <Table>
+                <div style={{marginRight: '400px'}}>게임 목록</div>
+                <Table style={{width: "500px", margin: "auto"}}>
                     <tbody>
-
+                        {games.map(({id, name, company, imgUrl, releaseDate, platform}) => (
+                            <tr key={id}>
+                                <td style={{width: '140px'}}><img style={{width: '140px', height: '130px'}} src={"/api/all/image/" + imgUrl} /></td>
+                                <td style={{textAlign:'left', paddingTop: "20px"}}>
+                                    <div>게임명: {name} </div>
+                                    <div>회사: {company} </div>
+                                    <div>발매일: {moment(releaseDate).format('YYYY-MM-DD')}</div>
+                                    <div>지원 플랫폼: {platform}</div>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </Table>
             </div>
