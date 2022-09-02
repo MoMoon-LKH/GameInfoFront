@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Table } from "react-bootstrap"
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import accessClient from "../../refresh";
 import axios from "axios";
 import moment from "moment";
@@ -11,6 +11,7 @@ export default function ManageGame(){
         search: ''
     });
     const [games, setGames] = useState([]);
+    const history = useHistory();
 
 
     const handleInput = e => {
@@ -39,6 +40,16 @@ export default function ManageGame(){
         handleGameList();
     }, [])
 
+    const handleGamePage = (item) => {
+        history.push({
+            pathname: "/manage/game/" + item.id,
+            state: {
+                game: item
+            }
+        })
+
+    }
+
     return (
         <>
         <div className="container">
@@ -53,14 +64,14 @@ export default function ManageGame(){
                 <div style={{marginRight: '400px'}}>게임 목록</div>
                 <Table style={{width: "500px", margin: "auto"}}>
                     <tbody>
-                        {games.map(({id, name, company, imgUrl, releaseDate, platform}) => (
-                            <tr key={id}>
-                                <td style={{width: '140px'}}><img style={{width: '140px', height: '130px'}} src={"/api/all/image/" + imgUrl} /></td>
-                                <td style={{textAlign:'left', paddingTop: "20px"}}>
-                                    <div>게임명: {name} </div>
-                                    <div>회사: {company} </div>
-                                    <div>발매일: {moment(releaseDate).format('YYYY-MM-DD')}</div>
-                                    <div>지원 플랫폼: {platform}</div>
+                        {games.map(item => (
+                            <tr key={item.id} onClick={handleGamePage.bind(this, item)}>    
+                                <td style={{width: '140px'}}><img style={{width: '140px', height: '130px'}} src={"/api/all/image/" + item.imgUrl} /></td>
+                                <td style={{textAlign:'left', paddingTop:'20px'}}>
+                                    <div>게임명: {item.name} </div>
+                                    <div>회사: {item.company} </div>
+                                    <div>발매일: {moment(item.releaseDate).format('YYYY-MM-DD')}</div>
+                                    <div>지원 플랫폼: {item.platform}</div>
                                 </td>
                             </tr>
                         ))}

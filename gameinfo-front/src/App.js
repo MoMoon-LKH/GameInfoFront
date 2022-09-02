@@ -14,6 +14,7 @@ import ManagePlatform from './page/manage/managePlatform';
 import ManageGenre from './page/manage/manageGenre';
 import CreateGame from './page/manage/createGame';
 import ReactModal from 'react-modal';
+import Game from './page/manage/game';
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
         <Route path='/manage/platform'><ManagePlatform/></Route>
         <Route path='/manage/genre'><ManageGenre/></Route>
         <Route  path='/manage/game/create'><CreateGame/></Route>
+        <Route exact path='/manage/game/:id'><Game/></Route>
         </>
         
       </Switch>

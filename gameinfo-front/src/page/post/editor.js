@@ -113,6 +113,10 @@ const EditorComponent = () => {
                 theme="snow"
                 placeholder="내용을 입력해주세요."
                 />
+
+        <div className="btn-div">
+            <button>작성</button> <button>취소</button>
+        </div>
     </>
     )
 }
