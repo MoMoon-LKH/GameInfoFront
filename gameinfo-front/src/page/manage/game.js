@@ -1,15 +1,27 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import { useLocation, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Games from "../post/games";
-import GameInfo from "./gameInfo";
+import GameInfo from "../post/gameInfo";
 
 
 export default function Game() {
 
     const location = useLocation();
+    const history = useHistory();
     const game = location.state.game;
 
+
+    const handleUpdate = () => {
+
+    }
+
+    const handleBack = e => {
+        
+        history.goBack();
+        e.preventDefault();
+    }
     
     return (
         <>
@@ -17,7 +29,7 @@ export default function Game() {
         <GameInfo game={game}/>
         <div className="btn-divs" style={{textAlign: 'center'}}>
             <div>
-                <button>수정</button> <button>뒤로</button>
+                <button onClick={handleUpdate}>수정</button> <button onClick={handleBack}>뒤로</button>
             </div>
         </div>
             

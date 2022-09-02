@@ -32,9 +32,8 @@ export default function GameInfo(props) {
                 <div className="introduction-title">
                     소개글
                 </div>
-                <textarea style={{width:'600px', height: '100px', marginTop: '7px', resize: "none"}} readOnly>
-                    {game.introduction}
-                </textarea>
+                <textarea style={{width:'600px', height: '100px', marginTop: '7px', resize: "none"}} defaultValue={game.introduction} readOnly/>
+               
             </div>
         </div>
         </>
