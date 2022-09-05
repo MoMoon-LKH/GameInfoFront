@@ -8,7 +8,8 @@ import moment from "moment";
 function Games(){
     
     const [games, setGames] = useState([]);
-
+    const [column, setColumn] = useState('name');
+    const [input, setInput] = useState()
 
     const getGames = () => {
         axios.get("/api/all/games/list")
@@ -25,8 +26,27 @@ function Games(){
 
     }
 
-    const handleSearch = e => {
+    const handleInput = (e) =>{
+        setInput({...input,
+            [e.target.name]: e.target.value
+        })
+    }
 
+    const handleSelect = (e) => {
+        setColumn(e.target.value);
+
+    }
+
+
+    const handleSearch = e => {
+        axios.get("/api/all/games/search/column",{
+            params: {
+                column: column,
+                search: input.search
+            }
+        }).then(res => {
+            setGames(res.data)
+        })
     }
 
     return (
@@ -35,11 +55,11 @@ function Games(){
         <div className="container" style={{width: "60%", margin: "auto"}}>
             <div className="games-container">
                 <div className="searech-name">
-                    <select>
+                    <select onChange={handleSelect} value={column}>
                         <option value="name">게임명</option>
                         <option value='company'>회사명</option>
                     </select>
-                    <input type='text' placeholder="검색할 내용을 입력해주세요" style={{width: '350px'}}/>
+                    <input type='text' placeholder="검색할 내용을 입력해주세요" style={{width: '350px'}} onChange={handleInput} name='search'/>
                     <span> <button onClick={handleSearch}>검색</button></span>
                 </div>
                 <Table style={{width: "500px", margin: "auto"}}>
