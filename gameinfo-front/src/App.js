@@ -4,7 +4,6 @@ import Header from "./header/header.js"
 import Join from "./page/member/join.js"
 import Login from "./page/member/login.js"
 import Main from "./page/post/main.js"
-import Games from "./page/post/games.js"
 import CreatePost from './page/post/createPost.js'
 import News from './page/post/news.js';
 import Reviews from './page/post/reviews.js';
@@ -15,6 +14,8 @@ import ManageGenre from './page/manage/manageGenre';
 import CreateGame from './page/manage/createGame';
 import ReactModal from 'react-modal';
 import Game from './page/manage/game';
+import Games from './page/games/games';
+import GameDetails from './page/games/gameDetails';
 
 function App() {
 
@@ -28,7 +29,8 @@ function App() {
         <>
         <Header/>
         <Route exact path='/'><Main></Main></Route>
-        <Route path='/games'><Games></Games></Route>
+        <Route exact path='/games'><Games></Games></Route>
+        <Route path='/games/:id'><GameDetails /></Route>
         <Route path='/news'><News></News></Route>
         <Route path='/reviews'><Reviews></Reviews></Route>
         <Route path='/post/create'><CreatePost></CreatePost></Route>
@@ -36,8 +38,9 @@ function App() {
         <Route exact path='/manage/game'><ManageGame/></Route>
         <Route path='/manage/platform'><ManagePlatform/></Route>
         <Route path='/manage/genre'><ManageGenre/></Route>
-        <Route  path='/manage/game/create'><CreateGame/></Route>
-        <Route exact path='/manage/game/:id'><Game/></Route>
+        <Route exact path='/manage/game/create'><CreateGame/></Route>
+        <Route exact path='/manage/game/info/:id'><Game/></Route>
+
         </>
         
       </Switch>

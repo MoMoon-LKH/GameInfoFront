@@ -42,7 +42,7 @@ export default function ManageGame(){
 
     const handleGamePage = (item) => {
         history.push({
-            pathname: "/manage/game/" + item.id,
+            pathname: "/manage/game/info/" + item.id,
             state: {
                 game: item
             }

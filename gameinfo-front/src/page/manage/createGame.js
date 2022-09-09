@@ -2,7 +2,6 @@ import accessClient from "../../refresh"
 import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import { Table } from "react-bootstrap";
-import userEvent from "@testing-library/user-event";
 import { useHistory } from "react-router-dom";
 
 export default function CreateGame(){

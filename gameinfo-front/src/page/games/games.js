@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Form, Table } from "react-bootstrap";
 import moment from "moment";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 
 function Games(){
@@ -10,6 +11,7 @@ function Games(){
     const [games, setGames] = useState([]);
     const [column, setColumn] = useState('name');
     const [input, setInput] = useState()
+    const history = useHistory();
 
     const getGames = () => {
         axios.get("/api/all/games/list")
@@ -23,7 +25,12 @@ function Games(){
     }, [])
 
     const handleGameInfoPage = (data) => {
-
+        history.push({
+            pathname: "/games/" + data.id,
+            state: {
+                game: data
+            }
+        })
     }
 
     const handleInput = (e) =>{
@@ -70,7 +77,7 @@ function Games(){
                                     <td style={{textAlign:'left', paddingTop:'20px'}}>
                                         <div>게임명: {item.name} </div>
                                         <div>회사: {item.company} </div>
-                                        <div>발매일: {moment(item.releaseDate).format('YYYY-MM-DD')}</div>
+                                        <div>발매일: {moment(item.releaseDate).format('YYYY.MM.DD')}</div>
                                         <div>지원 플랫폼: {item.platform}</div>
                                     </td>
                                 </tr>
