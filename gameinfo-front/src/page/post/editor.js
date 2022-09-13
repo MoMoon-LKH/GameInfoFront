@@ -3,13 +3,17 @@ import axios from 'axios'
 import * as Properties from '../../properties.js'
 
 //이렇게 라이브러리를 불러와서 사용하면 됩니다
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import accessClient from "../../refresh.jsx";
+import ImageResize from "@looop/quill-image-resize-module-react";
 
 
 const EditorComponent = () => {
 
-    const QuillRef = useRef<ReactQuill>(null);
+    Quill.register('modules/ImageResize', ImageResize)
+
+    const QuillRef = useRef();
     const [contents, setContents] = useState("");
 
     // 이미지를 업로드 하기 위한 함수
@@ -18,7 +22,7 @@ const EditorComponent = () => {
         const input = document.createElement("input");
         const formData = new FormData();
         let url = "";
-        const ajaxUrl = Properties.API_URL + "/user/image";
+        const ajaxUrl = "/api/user/image";
 
         input.setAttribute("type", "file");
         input.setAttribute("accept", "image/*");
@@ -28,21 +32,23 @@ const EditorComponent = () => {
         input.onchange = async () => {
         const file = input.files;
         if (file !== null) {
-            formData.append("image", file[0]);
+            
+            formData.append("file", file[0]);
+            
 
         // 저의 경우 파일 이미지를 서버에 저장했기 때문에
             // 백엔드 개발자분과 통신을 통해 이미지를 저장하고 불러왔습니다.
             try {
             //const res = axios를 통해 백엔드 개발자분과 통신했고, 데이터는 폼데이터로 주고받았습니다.
            
-            const res = await axios.post(ajaxUrl, formData, {
+            const res = await accessClient.post(ajaxUrl, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             })
             .then(res => {
                 // 백엔드 개발자 분이 통신 성공시에 보내주는 이미지 url을 변수에 담는다.
-                url = res.data.url;
+                url = "https://localhost:443/api/all/image/" + res.data.url;
             }).catch(error => {
                 alert(error);
             })
@@ -51,6 +57,7 @@ const EditorComponent = () => {
         // 커서의 위치를 알고 해당 위치에 이미지 태그를 넣어주는 코드 
             // 해당 DOM의 데이터가 필요하기에 useRef를 사용한다.
             const range = QuillRef.current?.getEditor().getSelection()?.index;
+            console.log(QuillRef.current);
             if (range !== null && range !== undefined) {
                 let quill = QuillRef.current?.getEditor();
 
@@ -94,6 +101,10 @@ const EditorComponent = () => {
             image: imageHandler,
         },
         },
+        ImageResize: {
+            parchment: Quill.import('parchment')
+        }
+        
     }),
     []
     );
@@ -101,11 +112,15 @@ const EditorComponent = () => {
 
     return (
     <>
+        <div>
+            <span>제목 </span><input name="title"/>
+        </div>
         <ReactQuill
                 ref={(element) => {
-                   /*  if (element !== null) {
-                    QuillRef.current = element;
-                    } */
+                    
+                    if (element !== null) {
+                        QuillRef.current = element;
+                    }
                 }}
                 value={contents}
                 onChange={setContents}
