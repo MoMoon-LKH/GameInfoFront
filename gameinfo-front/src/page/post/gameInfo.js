@@ -19,7 +19,7 @@ export default function GameInfo(props) {
                     <img style={{width: '200px', height: '200px'}} src={"/api/all/image/" + game.imgUrl}/>
                 </div>
                 
-                <div className="info-div" style={{display: 'inline-block', textAlign:'left', paddingTop:"30px"}}>
+                <div className="info-div" style={{display: 'inline-block', textAlign:'left', paddingTop:"30px", width:'350px'}}>
                     <div style={infodiv}>게임명: {game.name}</div>
                     <div style={infodiv}>회사명: {game.company}</div>
                     <div style={infodiv}>발매일: {moment(game.releaseDate).format('YYYY.MM.DD')}</div>

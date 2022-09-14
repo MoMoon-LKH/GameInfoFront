@@ -14,6 +14,14 @@ export default function GameDetails(props) {
         name: ''
     });
 
+    const liStyle = {
+        display: 'inline',
+        float: 'left',
+        width: '120px',
+        height: '35px',
+        margin: '10px 0',
+        paddingTop: '5px',
+    }
     
     
     const handleCategory = (id, name) => {
@@ -28,15 +36,21 @@ export default function GameDetails(props) {
    
     return (
         <>
+        <div className="title" style={{textAlign: 'center'}}>게임 목록</div>
         <div className="container"> 
+        
             <GameInfo game={game}></GameInfo>
-            <div>
-                <div onClick={() => handleCategory(0, '게임 정보')}>게임 정보</div>
-                <div onClick={() => handleCategory(1, '뉴스')}>뉴스</div>
-                <div onClick={() => handleCategory(2, '리뷰')}>리뷰</div>
-                <div onClick={() => handleCategory(3, '공략/팁')}>공략/팁</div>
-                <div onClick={() => handleCategory(4, '자유게시판')}>자유게시판</div>
+
+            <div className="game-category">
+                <ul style={{listStyleType: 'none', display: "inline-block", textAlign: 'center'}}>
+                    <li className="game-li" style={liStyle} onClick={() => handleCategory(0, '게임 정보')}>게임 정보</li>
+                    <li className="game-li" style={liStyle} onClick={() => handleCategory(1, '뉴스')}>뉴스</li>
+                    <li className="game-li" style={liStyle} onClick={() => handleCategory(2, '리뷰')}>리뷰</li>
+                    <li className="game-li" style={liStyle} onClick={() => handleCategory(3, '공략/팁')}>공략/팁</li>
+                    <li className="game-li" style={liStyle} onClick={() => handleCategory(4, '자유게시판')}>자유게시판</li>
+                </ul>
             </div>
+            
             <div className="cotent">
                 {renderSwitch(categorySelect, game)}
             </div>

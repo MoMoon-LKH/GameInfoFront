@@ -71,7 +71,7 @@ function Games(){
                 </div>
                 <Table style={{width: "500px", margin: "auto"}}>
                         <tbody>
-                            {games.map(item => (
+                            { games.map(item => (
                                 <tr key={item.id} onClick={handleGameInfoPage.bind(this, item)}>    
                                     <td style={{width: '140px'}}><img style={{width: '140px', height: '130px'}} src={"/api/all/image/" + item.imgUrl} /></td>
                                     <td style={{textAlign:'left', paddingTop:'20px'}}>

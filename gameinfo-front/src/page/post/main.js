@@ -7,7 +7,7 @@ function Main(){
 
 
     return (
-        <div className='main-container'>
+        <div className="container" style={{width: "60%", margin: "auto"}}>
             <div className='post-div'>
                 <div className='posts-subtitle'><Link className='main-link' to='/'>주요 뉴스 &gt;</Link>  </div>
             </div>

@@ -11,7 +11,6 @@ export const accessClient = axios.create({
 accessClient.interceptors.request.use(
     function(config){
         const token = JSON.parse(sessionStorage.getItem("user")).token;
-        
        
         if(token){
             config.headers["Authorization"] = 'Bearer ' + token;

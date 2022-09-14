@@ -7,14 +7,28 @@ import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import accessClient from "../../refresh.jsx";
 import ImageResize from "@looop/quill-image-resize-module-react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min.js";
 
 
-const EditorComponent = () => {
+const EditorComponent = (props) => {
 
     Quill.register('modules/ImageResize', ImageResize)
 
     const QuillRef = useRef();
     const [contents, setContents] = useState("");
+    const [inputs, setInputs] = useState();
+    const history = useHistory();
+    const [game, setGameId] = useState({});
+    const [categoryId, setcategoryId] = useState(props.categoryId);
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const handleInput = (e) => {
+        setInputs({
+            ...inputs,
+            [e.target.name]: e.target.value
+        })
+    }
+
 
     // 이미지를 업로드 하기 위한 함수
     const imageHandler = () => {
@@ -76,6 +90,8 @@ const EditorComponent = () => {
             }
         }
         };
+
+        
     };
 
 
@@ -110,28 +126,63 @@ const EditorComponent = () => {
     );
 
 
+    const handlePost = () => {
+        
+        const data = {
+            title: inputs.title,
+            content: contents,
+            memberId: JSON.parse(sessionStorage.getItem("user")).id,
+            gameId: game.id,
+            categoryId: categoryId
+        }
+
+        console.log(data);
+
+    }
+
+    const handleBack = () => {
+        history.goBack();
+    }
+
+    const findGames = (e) => {
+
+    }
+
     return (
     <>
         <div>
-            <span>제목 </span><input name="title"/>
-        </div>
-        <ReactQuill
-                ref={(element) => {
-                    
-                    if (element !== null) {
-                        QuillRef.current = element;
-                    }
-                }}
-                value={contents}
-                onChange={setContents}
-                modules={modules}
-                theme="snow"
-                placeholder="내용을 입력해주세요."
-                />
-
-        <div className="btn-div">
-            <button>작성</button> <button>취소</button>
-        </div>
+            <div style={{textAlign:'left'}}>
+                <span>제목: </span><input style={{width:'500px'}} onChange={handleInput} name="title" placeholder="제목을 입력해주세요"/>
+            </div>
+            <div style={{  margin:'10px auto'}}>
+                <ReactQuill
+                        ref={(element) => {
+                            
+                            if (element !== null) {
+                                QuillRef.current = element;
+                            }
+                        }}
+                        value={contents}
+                        onChange={setContents}
+                        modules={modules}
+                        theme="snow"
+                        placeholder="내용을 입력해주세요."
+                        />
+            </div>
+            <div className="selectOption" style={{textAlign: 'left'}}>
+                <div>
+                    <div>게시판 구분</div>
+                    <div></div>
+                </div>
+                <div>
+                    <div>해당 게임 선택</div>
+                    <span>선택 안함</span><button onClick={findGames}>선택</button>
+                </div>
+            </div>
+            <div className="btn-div" style={{textAlign:'center', margin:'20px auto'}}>
+                    <button onClick={handlePost}>작성</button> <button onClick={handleBack}>뒤로</button>
+            </div>  
+        </div> 
     </>
     )
 }

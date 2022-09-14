@@ -9,7 +9,7 @@ export default function PostList(props){
     const categoryId = props.category.id;
     const gameId = props.gameId;
 
-    const [posts, setPosts] = useState();
+    const [posts, setPosts] = useState([]);
 
 
     const handleList = () => {
@@ -34,20 +34,27 @@ export default function PostList(props){
             <div>
                 <Table>
                     <thead>
-                        <th>제목</th>
-                        <th>글쓴이</th>
-                        <th>조회</th>
-                        <th>닐찌</th>
+                        <tr>
+                            <th>ID</th>
+                            <th>제목</th>
+                            <th>글쓴이</th>
+                            <th>조회</th>
+                            <th>닐짜</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        {posts.map(post => (
+                        {posts.size > 0 ? 
+                            posts.map(post => (
                             <tr key={post.id}>
+                                <td>{post.id}</td>
                                 <td>{post.title}</td>
                                 <td>{post.nickname}</td>
                                 <td>{post.view}</td>
                                 <td>{post.createDate}</td>
                             </tr>
-                        ))}
+                        )) :
+                            <tr><td colSpan={5}>해당 게시글이 없습니다.</td></tr>
+                        }
                     </tbody>
                 </Table>
             </div>

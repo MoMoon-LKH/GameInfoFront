@@ -2,12 +2,13 @@
 import EditorComponent from "./editor"
 
 const createPost = (props) => {
-
+    
+    
 
     return (
         <>
-            <div>
-                <EditorComponent></EditorComponent>
+            <div className="container" style={{width: '65%'}}>
+                <EditorComponent categoryId={props.match.params.id} />      
             </div>
         </>
     )
