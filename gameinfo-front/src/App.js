@@ -33,7 +33,7 @@ function App() {
         <Route path='/games/:id'><GameDetails /></Route>
         <Route path='/news'><News></News></Route>
         <Route path='/reviews'><Reviews></Reviews></Route>
-        <Route exact path='/post/create/:id' component={CreatePost}></Route>
+        <Route exact path='/post/create'><CreatePost/></Route>
         <Route exact path='/manage'><ManageMain/></Route>
         <Route exact path='/manage/game'><ManageGame/></Route>
         <Route path='/manage/platform'><ManagePlatform/></Route>

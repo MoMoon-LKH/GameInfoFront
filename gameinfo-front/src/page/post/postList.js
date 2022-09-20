@@ -2,17 +2,20 @@ import axios, { Axios } from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Table } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 
 export default function PostList(props){
 
     const categoryId = props.category.id;
-    const gameId = props.gameId;
+    const gameId = props.game.id;
+    const history = useHistory();
 
     const [posts, setPosts] = useState([]);
 
 
-    const handleList = () => {
+    const handleList = async () => {
         axios.get("/api/all/post/list", {
             params:{
                 categoryId: categoryId,
@@ -39,7 +42,7 @@ export default function PostList(props){
                             <th>제목</th>
                             <th>글쓴이</th>
                             <th>조회</th>
-                            <th>닐짜</th>
+                            <th>날짜</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,6 +60,19 @@ export default function PostList(props){
                         }
                     </tbody>
                 </Table>
+                <div>
+                <div>
+                    <button onClick={() => 
+                        history.push({
+                            pathname: "/post/create",
+                            state: {
+                                category: props.category,
+                                game: props.game
+                            }
+                        })
+                    } >글쓰기</button>
+                </div>
+                </div>
             </div>
         </>
     )

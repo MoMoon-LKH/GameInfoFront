@@ -18,8 +18,8 @@ const EditorComponent = (props) => {
     const [contents, setContents] = useState("");
     const [inputs, setInputs] = useState();
     const history = useHistory();
-    const [game, setGameId] = useState({});
-    const [categoryId, setcategoryId] = useState(props.categoryId);
+    const game = props.gameId;
+    const [categoryId, setcategoryId] = useState(parseInt(props.categoryId));
     const [modalVisible, setModalVisible] = useState(false);
 
     const handleInput = (e) => {
@@ -132,11 +132,18 @@ const EditorComponent = (props) => {
             title: inputs.title,
             content: contents,
             memberId: JSON.parse(sessionStorage.getItem("user")).id,
-            gameId: game.id,
+            gameId: game,
             categoryId: categoryId
         }
 
         console.log(data);
+
+        accessClient.post('api/user/post', data)
+        .then( res => {
+            console.log(res);
+        }).catch(error => {
+            alert(error);
+        })
 
     }
 
@@ -146,6 +153,14 @@ const EditorComponent = (props) => {
 
     const findGames = (e) => {
 
+    }
+
+    const categoryRadio = (e) => {
+        setcategoryId(parseInt(e.target.value))
+    }
+
+    const radioStyle = {
+        margin: '5px 10px'
     }
 
     return (
@@ -170,17 +185,22 @@ const EditorComponent = (props) => {
                         />
             </div>
             <div className="selectOption" style={{textAlign: 'left'}}>
-                <div>
-                    <div>게시판 구분</div>
-                    <div></div>
+                <div className="post-div">
+                    <div className="post-title">게시판 구분</div>
+                    <div>
+                        <span style={radioStyle} className="radioInputs"><input type='radio' value={1} checked={categoryId === 1 ? true : false} onChange={categoryRadio}/><label>뉴스</label></span>
+                        <span style={radioStyle} className="radioInputs"><input type='radio' value={2} checked={categoryId === 2 ? true : false} onChange={categoryRadio}/><label>리뷰</label></span>
+                        <span style={radioStyle} className="radioInputs"><input type='radio' value={3} checked={categoryId === 3 ? true : false} onChange={categoryRadio}/><label>공략/팁</label></span>
+                        <span style={radioStyle} className="radioInputs"><input type='radio' value={4} checked={categoryId === 4 ? true : false} onChange={categoryRadio}/><label>자유게시판</label></span>
+                    </div>
                 </div>
-                <div>
-                    <div>해당 게임 선택</div>
+                {/* <div className="post-div">
+                    <div className="post-title">해당 게임</div>
                     <span>선택 안함</span><button onClick={findGames}>선택</button>
-                </div>
+                </div> */}
             </div>
             <div className="btn-div" style={{textAlign:'center', margin:'20px auto'}}>
-                    <button onClick={handlePost}>작성</button> <button onClick={handleBack}>뒤로</button>
+                    <button onClick={handlePost}>작성</button> <button onClick={handleBack}>취소</button>
             </div>  
         </div> 
     </>

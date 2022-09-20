@@ -10,8 +10,8 @@ export default function GameDetails(props) {
     const location = useLocation();
     const game = location.state.game;
     const [categorySelect, setCategorySelect] = useState({
-        id: '',
-        name: ''
+        id: 0,
+        name: '게임 정보'
     });
 
     const liStyle = {
@@ -78,7 +78,8 @@ function renderSwitch(category, game){
             return (
                 <>
                     <div>
-                        <PostList category={category} gameId={game.id} />
+                        <PostList category={category} game={game} />
+                        
                     </div>
                 </>
             )
