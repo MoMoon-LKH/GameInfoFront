@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Form, Table } from "react-bootstrap";
 import moment from "moment";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import Paging from "../post/paging";
 
 
 function Games(){
@@ -84,6 +85,14 @@ function Games(){
                             ))}
                         </tbody>
                     </Table>
+            </div>
+            <div className="table-bottom">
+                <div>
+                    <Paging />
+                </div>
+                <div>
+
+                </div>
             </div>
         </div>
     

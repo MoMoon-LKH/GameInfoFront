@@ -8,35 +8,13 @@ import moment from "moment";
 
 
 
-export default function PostList(props){
+export default function PostList({posts}){
 
-    const history = useHistory();
-
-    const [total, setTotal] = useState(0);
-    const [posts, setPosts] = useState([]);
-
-
-    const handleList = async () => {
-        const res = await axios.get("/api/all/post/list", {
-            params:{
-                categoryId: props.categoryId,
-                gameId: props.gameId
-            }
-        })
-
-        setPosts(res.data.posts)
-        setTotal(res.data.total)
-        console.log(res.data)
-    }
-
-    useEffect(() => {
-        handleList();
-    }, [])
-
+   
 
     return (
         <>
-            <div className="category-div">
+            <div className="list-div">
                 <Table>
                     <thead>
                         <tr>
@@ -59,19 +37,7 @@ export default function PostList(props){
                         ))}
                     </tbody>
                 </Table>
-                <div className="table-bottom">
-                    <div>
-                        <button onClick={() => 
-                            history.push({
-                                pathname: "/post/create",
-                                state: {
-                                    category: props.category,
-                                    game: props.game
-                                }
-                            })
-                        } >글쓰기</button>
-                    </div>
-                </div>
+                
             </div>
         </>
     )

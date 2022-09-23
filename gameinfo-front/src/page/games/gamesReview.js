@@ -4,11 +4,14 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Table } from "react-bootstrap";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import Paging from "../post/paging";
+import PostList from "../post/postList";
 
 export default function GamesReviews(props) {
 
     const [total, setTotal] = useState(0);
     const [posts, setPosts] = useState([]);
+    const [page, setPage] = useState(1);
     const history = useHistory();
     const category = {
         id: 2,
@@ -19,12 +22,17 @@ export default function GamesReviews(props) {
         const res = await axios.get("/api/all/post/list", {
             params:{
                 categoryId: category.id,
-                gameId: props.game.id
+                gameId: props.game.id,
+                page: page - 1
             }
         })
 
         setPosts(res.data.posts)
         setTotal(res.data.total)
+    }
+
+    const pageList = (e) => {
+
     }
 
     useEffect(() => {
@@ -34,8 +42,8 @@ export default function GamesReviews(props) {
 
     return (
         <>
-            <div className="category-div">
-                <Table>
+            <div className="table-div">
+               {/*  <Table>
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -56,8 +64,12 @@ export default function GamesReviews(props) {
                             </tr>
                         ))}
                     </tbody>
-                </Table>
+                </Table> */}
+                <PostList posts={posts}/>
                 <div className="table-bottom">
+                    <div>
+                        <Paging page={page} perPage={10} total={total} setPage={pageList} />
+                    </div>
                     <div>
                         <button onClick={() => 
                             history.push({

@@ -4,8 +4,10 @@ import { NavLink, Switch } from "react-router-dom";
 import { Route, useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import GameInfo from "../post/gameInfo";
 import PostList from "../post/postList";
+import GamesFree from "./gamesFree";
 import GamesNews from "./gamesNews";
 import GamesReviews from "./gamesReview";
+import GamesTips from "./gamesTip";
 
 export default function GameDetails(props) {
 
@@ -92,9 +94,11 @@ export default function GameDetails(props) {
                 </Route>
                 <Route path="/games/tips">
                     <div>공략/팁</div>
+                    <GamesTips game={game} />
                 </Route>
                 <Route path="/games/freeboard">
                     <div>자유게시판</div>
+                    <GamesFree game={game} />
                 </Route>
 
             </Switch>
