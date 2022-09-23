@@ -26,7 +26,7 @@ function Games(){
 
     const handleGameInfoPage = (data) => {
         history.push({
-            pathname: "/games/" + data.id,
+            pathname: "/games/info" ,
             state: {
                 game: data
             }

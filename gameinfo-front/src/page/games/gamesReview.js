@@ -1,32 +1,30 @@
-import axios, { Axios } from "axios";
+import axios from "axios";
+import moment from "moment";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Table } from "react-bootstrap";
-import { Link, useHistory } from "react-router-dom";
-import moment from "moment";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-
-
-
-export default function PostList(props){
-
-    const history = useHistory();
+export default function GamesReviews(props) {
 
     const [total, setTotal] = useState(0);
     const [posts, setPosts] = useState([]);
-
+    const history = useHistory();
+    const category = {
+        id: 2,
+        name: '리뷰'
+    }
 
     const handleList = async () => {
         const res = await axios.get("/api/all/post/list", {
             params:{
-                categoryId: props.categoryId,
-                gameId: props.gameId
+                categoryId: category.id,
+                gameId: props.game.id
             }
         })
 
         setPosts(res.data.posts)
         setTotal(res.data.total)
-        console.log(res.data)
     }
 
     useEffect(() => {
@@ -65,7 +63,7 @@ export default function PostList(props){
                             history.push({
                                 pathname: "/post/create",
                                 state: {
-                                    category: props.category,
+                                    category: category,
                                     game: props.game
                                 }
                             })
@@ -73,6 +71,8 @@ export default function PostList(props){
                     </div>
                 </div>
             </div>
+
         </>
-    )
+    );
+
 }

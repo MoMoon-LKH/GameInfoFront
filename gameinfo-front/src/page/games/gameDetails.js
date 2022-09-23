@@ -1,18 +1,21 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { NavLink, Switch } from "react-router-dom";
+import { Route, useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import GameInfo from "../post/gameInfo";
 import PostList from "../post/postList";
+import GamesNews from "./gamesNews";
+import GamesReviews from "./gamesReview";
 
 export default function GameDetails(props) {
 
     const history = useHistory();
     const location = useLocation();
     const game = location.state.game;
-    const [categorySelect, setCategorySelect] = useState({
-        id: 0,
-        name: '게임 정보'
-    });
+    const giveGame = {
+        id: game.id,
+        name: game.name
+    }
 
     const liStyle = {
         display: 'inline',
@@ -24,16 +27,11 @@ export default function GameDetails(props) {
     }
     
     
-    const handleCategory = (id, name) => {
-        setCategorySelect({
-            id: parseInt(id),
-            name: name
-        });
-    }
+    
 
 
     
-   
+   // 탭으로 각 페이지 
     return (
         <>
         <div className="title" style={{textAlign: 'center'}}>게임 목록</div>
@@ -43,52 +41,86 @@ export default function GameDetails(props) {
 
             <div className="game-category">
                 <ul style={{listStyleType: 'none', display: "inline-block", textAlign: 'center'}}>
-                    <li className="game-li" style={liStyle} onClick={() => handleCategory(0, '게임 정보')}>게임 정보</li>
-                    <li className="game-li" style={liStyle} onClick={() => handleCategory(1, '뉴스')}>뉴스</li>
-                    <li className="game-li" style={liStyle} onClick={() => handleCategory(2, '리뷰')}>리뷰</li>
-                    <li className="game-li" style={liStyle} onClick={() => handleCategory(3, '공략/팁')}>공략/팁</li>
-                    <li className="game-li" style={liStyle} onClick={() => handleCategory(4, '자유게시판')}>자유게시판</li>
+                    <li className="game-li" style={liStyle}>
+                        <NavLink to={{
+                            pathname:'/games/info',
+                            state: {
+                                game: game
+                            }
+                        }}>게임 정보</NavLink></li>
+                        <li className="game-li" style={liStyle}>
+                            <NavLink to={{
+                                pathname:'/games/news',
+                                state: {
+                                    game: game
+                                }
+                        }}>뉴스</NavLink></li>
+                    <li className="game-li" style={liStyle} ><NavLink to={{
+                            pathname:'/games/reviews',
+                            state: {
+                                game: game
+                            }
+                        }}>리뷰</NavLink></li>
+                    <li className="game-li" style={liStyle} ><NavLink to={{
+                            pathname:'/games/tips',
+                            state: {
+                                game: game
+                            }
+                        }}>공략/팁</NavLink></li>
+                    <li className="game-li" style={liStyle} ><NavLink to={{
+                            pathname:'/games/freeboard',
+                            state: {
+                                game: game
+                            }
+                        }}>자유게시판</NavLink></li>
                 </ul>
             </div>
+           
+            <Switch>
+                <Route path='/games/info'>
+                    <div>게임소개 </div>
+                    {game.introduction}
+                </Route>
+                <Route path="/games/news">
+                    <div>뉴스</div>
+                    <GamesNews game={game}/>
+                </Route>
+                <Route path="/games/reviews">
+                    <div>리뷰</div>
+                    <GamesReviews game={game} />
+
+                </Route>
+                <Route path="/games/tips">
+                    <div>공략/팁</div>
+                </Route>
+                <Route path="/games/freeboard">
+                    <div>자유게시판</div>
+                </Route>
+
+            </Switch>
             
-            <div className="cotent">
-                {renderSwitch(categorySelect, game)}
-            </div>
         </div>
         
         </>
     )
 }
-
+/* 
 function renderSwitch(category, game){
     switch(category.id) {
         case 0:
             return (
                 <>
-                    <div>
-                        <div>게임 소개</div>
-                        <div>
-                            {game.introduction}
-                        </div>
-                    </div>
+                    
                 </>
             )
         
         case 1:
-            return (
-                <>
-                    <div>
-                        <PostList category={category} game={game} />
-                        
-                    </div>
-                </>
-            )
 
         case 2:
             return (
                 <>
                     <div>
-                        리뷰
+                        <PostList category={category} game={game}/>
                     </div>
                 </>
             )
@@ -108,5 +140,5 @@ function renderSwitch(category, game){
                 </div>
             </>
         )
-    }
-}
+    } 
+}*/
