@@ -10,6 +10,11 @@ import moment from "moment";
 
 export default function PostList({posts}){
 
+    const history = useHistory();
+
+    const handlePostPage = (id) => {
+        history.push('/post/' + id)
+    }
    
 
     return (
@@ -27,12 +32,13 @@ export default function PostList({posts}){
                     </thead>
                     <tbody>
                         {posts.map(post => (
-                            <tr key={post.id}>
+                            <tr key={post.id} onClick={()=>handlePostPage(post.id)}>           
                                 <td>{post.id}</td>
                                 <td>{post.title}</td>
                                 <td>{post.nickname}</td>
                                 <td>{post.view}</td>
                                 <td>{moment(post.createDate).format('YYYY-MM-DD HH:mm')}</td>
+                            
                             </tr>
                         ))}
                     </tbody>

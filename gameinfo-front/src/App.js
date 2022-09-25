@@ -16,6 +16,7 @@ import ReactModal from 'react-modal';
 import Game from './page/manage/game';
 import Games from './page/games/games';
 import GameDetails from './page/games/gameDetails';
+import Post from './page/post/post';
 
 function App() {
 
@@ -40,7 +41,7 @@ function App() {
         <Route path='/manage/genre'><ManageGenre/></Route>
         <Route exact path='/manage/game/create'><CreateGame/></Route>
         <Route exact path='/manage/game/info/:id'><Game/></Route>
-
+        <Route exact path='/post/:id'><Post/></Route>
         </>
         
       </Switch>
