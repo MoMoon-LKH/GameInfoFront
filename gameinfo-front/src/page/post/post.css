@@ -1,0 +1,39 @@
+.post-container{
+    width: 60%;
+    margin: 0 auto;
+    
+}
+
+
+.post-header{
+    text-align: left;   
+    border: 1px solid lightgray;    
+}
+
+.post-category{
+
+}
+
+.post-title{
+    background-color: rgba(211, 211, 211, 0.377);
+    font-weight:500;
+    font-size: 20px;
+
+}
+
+
+.post-div{
+    padding: 5px 10px
+}
+
+.post-content{
+    border: 1px solid lightgray;
+    padding: 30px;
+
+}
+
+.comment-container{
+    margin-top: 20px;
+    padding: 5px 10px;
+}
+

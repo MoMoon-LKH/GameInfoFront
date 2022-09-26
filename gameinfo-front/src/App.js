@@ -41,7 +41,7 @@ function App() {
         <Route path='/manage/genre'><ManageGenre/></Route>
         <Route exact path='/manage/game/create'><CreateGame/></Route>
         <Route exact path='/manage/game/info/:id'><Game/></Route>
-        <Route exact path='/post/:id'><Post/></Route>
+        <Route exact path='/post/:id' ><Post /></Route>
         </>
         
       </Switch>

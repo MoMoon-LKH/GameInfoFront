@@ -3,6 +3,7 @@ import { useState } from "react";
 import { NavLink, Switch } from "react-router-dom";
 import { Route, useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import GameInfo from "../post/gameInfo";
+import Post from "../post/post";
 import PostList from "../post/postList";
 import GamesFree from "./gamesFree";
 import GamesNews from "./gamesNews";
@@ -100,7 +101,6 @@ export default function GameDetails(props) {
                     <div>자유게시판</div>
                     <GamesFree game={game} />
                 </Route>
-
             </Switch>
             
         </div>

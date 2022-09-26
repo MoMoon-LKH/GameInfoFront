@@ -39,15 +39,20 @@ function Main(){
 
     }, [])
 
+    const subtitleStyle = {
+        margin: '5px',
+        fontSize: '20px'
+    }
+
     return (
-        <div className="container" style={{width: "60%", margin: "auto"}}>
+        <div className="container" style={{width: "60%", margin: "auto", textAlign: 'left'}}>
             <div className='post-div'>
-                <div className='posts-subtitle'><Link className='main-link' to='/'>주요 뉴스 &gt;</Link></div>
-                <Table>
+                <div className='posts-subtitle' style={subtitleStyle}><Link className='main-link' to='/'>주요 뉴스 &gt;</Link></div>
+                <Table style={{border: '1px solid lightgray'}}>
                     <tbody>     
                         {news.map(post => (
-                            <tr key={post.id}>
-                                <td>{post.title}</td>
+                            <tr key={post.id} >
+                                <td style={{paddingLeft: '15px'}}>{post.title}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -56,16 +61,12 @@ function Main(){
                 
             </div>
             <div className='post-div'>
-                <div className='posts-subtitle'><Link className='main-link' to='/'>리뷰 &gt;</Link></div>
-                <Table>
+                <div className='posts-subtitle' style={subtitleStyle}><Link className='main-link' to='/'>리뷰 &gt;</Link></div>
+                <Table style={{border: '1px solid lightgray'}}>
                     <tbody>     
                         {review.map(post => (
                             <tr key={post.id}>
-                                <td>{post.id}</td>
-                                <td>{post.title}</td>
-                                <td>{post.nickname}</td>
-                                <td>{post.view}</td>
-                                <td>{post.createDate}</td>
+                                <td style={{paddingLeft: '15px'}}>{post.title}</td>                                
                             </tr>
                         ))}
                     </tbody>
