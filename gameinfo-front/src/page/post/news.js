@@ -14,6 +14,7 @@ function News(){
     const [page, setPage] = useState(0);
     const [total, setTotal] = useState(0);
     const [news, setNews] = useState([]);
+    const history = useHistory();
 
     const handleNews = async () => {
         const res = await axios.get("/api/all/post/list",{
@@ -29,6 +30,10 @@ function News(){
 
     const onChangePage = (e) => {
          console.log(e);
+    }
+
+    const handlePostPage = (id) => {
+        history.push('/post/main/' + id)
     }
 
     useEffect(() => {
@@ -53,7 +58,7 @@ function News(){
                     </thead>
                     <tbody>
                         {news.map(post => (
-                            <tr key={post.id}>
+                            <tr key={post.id} onClick={()=>handlePostPage(post.id)}>
                                 <td>{post.title}</td>
                                 <td>{post.nickname}</td>
                                 <td>{post.view}</td>
